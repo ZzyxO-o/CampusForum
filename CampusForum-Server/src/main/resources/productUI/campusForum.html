@@ -1,0 +1,2121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="filename" content="campus-forum.html" />
+  <title>Campus Forum · 校园论坛</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            primary: { 50:'#f0f4ff', 100:'#e0eaff', 200:'#c7d7fd', 300:'#a5bafc', 400:'#8196f8', 500:'#6272f0', 600:'#4f56e5', 700:'#4044ca', 800:'#3538a4', 900:'#303483' },
+            accent:  { 50:'#fff4ed', 100:'#ffe6d5', 200:'#fecba8', 300:'#fda471', 400:'#fb7c37', 500:'#f95c13', 600:'#ea400a', 700:'#c22e0b', 800:'#9a2610', 900:'#7c2010' },
+            slate: { 50:'#f8fafc', 100:'#f1f5f9', 200:'#e2e8f0', 300:'#cbd5e1', 400:'#94a3b8', 500:'#64748b', 600:'#475569', 700:'#334155', 800:'#1e293b', 900:'#0f172a' }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f8fafc; color: #1e293b; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    /* Page system */
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: block; }
+
+    /* Gradient backgrounds */
+    .grad-primary { background: linear-gradient(135deg, #6272f0 0%, #8196f8 100%); }
+    .grad-card { background: linear-gradient(135deg, rgba(98,114,240,0.08) 0%, rgba(129,150,248,0.04) 100%); }
+
+    /* Glass effect */
+    .glass { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.6); }
+
+    /* Card shadow */
+    .card-shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04); }
+    .card-shadow-lg { box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 40px rgba(0,0,0,0.08); }
+
+    /* Like animation */
+    @keyframes likePopIn {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.4); }
+      70% { transform: scale(0.9); }
+      100% { transform: scale(1); }
+    }
+    .like-pop { animation: likePopIn 0.35s ease; }
+
+    /* Skeleton loader */
+    @keyframes shimmer {
+      0% { background-position: -400px 0; }
+      100% { background-position: 400px 0; }
+    }
+    .skeleton {
+      background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 6px;
+    }
+
+    /* Toast */
+    #toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+    .toast { padding: 12px 20px; border-radius: 12px; font-size: 14px; font-weight: 500; color: white; min-width: 200px; max-width: 340px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); animation: toastIn 0.3s ease; pointer-events: none; }
+    .toast-success { background: linear-gradient(135deg, #10b981, #059669); }
+    .toast-error   { background: linear-gradient(135deg, #ef4444, #dc2626); }
+    .toast-info    { background: linear-gradient(135deg, #6272f0, #4f56e5); }
+    @keyframes toastIn { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity:1; transform: translateX(0); } to { opacity:0; transform: translateX(40px); } }
+    .toast.hide { animation: toastOut 0.3s ease forwards; }
+
+    /* AI typing cursor */
+    @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+    .typing-cursor::after { content: '▌'; animation: blink 0.8s step-end infinite; color: #6272f0; }
+
+    /* Smooth transitions */
+    .nav-item { transition: all 0.2s ease; }
+    .btn-hover { transition: all 0.2s ease; }
+    .btn-hover:hover { transform: translateY(-1px); }
+
+    /* Notification badge */
+    .notif-badge { position: absolute; top: -4px; right: -4px; width: 18px; height: 18px; background: #ef4444; border-radius: 50%; font-size: 10px; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; border: 2px solid white; }
+
+    /* Tab underline */
+    .tab-active { border-bottom: 2px solid #6272f0; color: #6272f0; font-weight: 600; }
+
+    /* Rich text editor simulation */
+    .editor-toolbar button { padding: 6px 10px; border-radius: 6px; font-size: 12px; color: #475569; background: transparent; border: none; cursor: pointer; transition: background 0.15s; }
+    .editor-toolbar button:hover { background: #f1f5f9; color: #1e293b; }
+    [contenteditable] { outline: none; }
+    [contenteditable]:empty::before { content: attr(data-placeholder); color: #94a3b8; }
+
+    /* Sidebar active */
+    .sidebar-item.active { background: #eff1fe; color: #6272f0; font-weight: 600; }
+
+    /* Progress ring */
+    .progress-ring { transform: rotate(-90deg); }
+
+    /* Table row hover */
+    .table-row:hover { background: #f8fafc; }
+
+    /* Chat bubble */
+    .bubble-user { background: linear-gradient(135deg, #6272f0, #4f56e5); color: white; border-radius: 18px 18px 4px 18px; }
+    .bubble-ai { background: white; color: #1e293b; border-radius: 18px 18px 18px 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+
+    /* Dropdown */
+    .dropdown-menu { transform-origin: top right; transition: opacity 0.15s, transform 0.15s; }
+    .dropdown-menu.open { opacity: 1; transform: scale(1); pointer-events: auto; }
+    .dropdown-menu.closed { opacity: 0; transform: scale(0.95); pointer-events: none; }
+
+    /* Star rating */
+    .star-active { color: #fbbf24; }
+    .star-inactive { color: #e2e8f0; }
+
+    /* Course card hover */
+    .course-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .course-card:hover { transform: translateY(-3px); box-shadow: 0 8px 32px rgba(98,114,240,0.15); }
+
+    /* Sidebar nav */
+    .admin-nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 10px; font-size: 14px; font-weight: 500; color: #475569; cursor: pointer; transition: all 0.15s; }
+    .admin-nav-item:hover, .admin-nav-item.active { background: #eff1fe; color: #6272f0; }
+    .admin-nav-item i { width: 18px; height: 18px; }
+
+    /* Infinite scroll loading */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin 0.8s linear infinite; }
+
+    /* Hero gradient */
+    .login-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+
+    /* Badge colors */
+    .badge-tech     { background: #eff1fe; color: #6272f0; }
+    .badge-life     { background: #fef3c7; color: #d97706; }
+    .badge-study    { background: #ecfdf5; color: #059669; }
+    .badge-game     { background: #fff1f2; color: #e11d48; }
+    .badge-question { background: #f0fdf4; color: #16a34a; }
+    .badge-hot      { background: #fef2f2; color: #ef4444; }
+    .badge-news     { background: #eff6ff; color: #3b82f6; }
+
+    /* Smooth page transitions */
+    .page.active { animation: fadeIn 0.2s ease; }
+    @keyframes fadeIn { from { opacity: 0.6; } to { opacity: 1; } }
+
+    /* Desktop 1440 wrapper */
+    .desktop-wrapper { max-width: 1440px; margin: 0 auto; }
+  </style>
+</head>
+<body class="bg-slate-50">
+
+<!-- ================================================================
+     TOAST CONTAINER
+================================================================ -->
+<div id="toast-container"></div>
+
+<!-- ================================================================
+     PAGE 1: LOGIN / REGISTER
+================================================================ -->
+<div id="page-auth" class="page active">
+  <div class="min-h-screen flex" style="min-height:100vh;">
+    <!-- Left panel -->
+    <div class="hidden lg:flex lg:w-1/2 login-bg flex-col justify-between p-16 relative overflow-hidden">
+      <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-20 left-20 w-64 h-64 rounded-full bg-white blur-3xl"></div>
+        <div class="absolute bottom-32 right-16 w-80 h-80 rounded-full bg-white blur-3xl"></div>
+      </div>
+      <div class="relative">
+        <div class="flex items-center gap-3 mb-2">
+          <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+            <i data-lucide="book-open" class="w-5 h-5 text-white"></i>
+          </div>
+          <span class="text-white font-bold text-xl">CampusTalk</span>
+        </div>
+        <p class="text-white/60 text-sm">校园论坛社区系统</p>
+      </div>
+      <div class="relative">
+        <h2 class="text-white font-bold text-4xl leading-tight mb-6">连接每一位<br/>同学的声音</h2>
+        <p class="text-white/70 text-base leading-relaxed mb-10">发现精彩内容，分享校园生活，与同学共同探讨学习与成长。</p>
+        <div class="flex gap-4">
+          <div class="bg-white/15 backdrop-blur-sm rounded-2xl p-4 flex-1 border border-white/20">
+            <div class="text-white font-bold text-2xl mb-1">12,480</div>
+            <div class="text-white/60 text-xs">活跃用户</div>
+          </div>
+          <div class="bg-white/15 backdrop-blur-sm rounded-2xl p-4 flex-1 border border-white/20">
+            <div class="text-white font-bold text-2xl mb-1">56,920</div>
+            <div class="text-white/60 text-xs">帖子总数</div>
+          </div>
+          <div class="bg-white/15 backdrop-blur-sm rounded-2xl p-4 flex-1 border border-white/20">
+            <div class="text-white font-bold text-2xl mb-1">98.6%</div>
+            <div class="text-white/60 text-xs">好评率</div>
+          </div>
+        </div>
+      </div>
+      <div class="relative">
+        <div class="flex items-center gap-3">
+          <div class="flex -space-x-2">
+            <img src="https://i.pravatar.cc/32?img=1" class="w-8 h-8 rounded-full border-2 border-white" alt="user" />
+            <img src="https://i.pravatar.cc/32?img=2" class="w-8 h-8 rounded-full border-2 border-white" alt="user" />
+            <img src="https://i.pravatar.cc/32?img=3" class="w-8 h-8 rounded-full border-2 border-white" alt="user" />
+            <img src="https://i.pravatar.cc/32?img=4" class="w-8 h-8 rounded-full border-2 border-white" alt="user" />
+          </div>
+          <span class="text-white/70 text-sm">今日已有 <span class="text-white font-semibold">238</span> 人登录</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel - Auth form -->
+    <div class="flex-1 flex items-center justify-center p-6 lg:p-16 bg-white">
+      <div class="w-full max-w-md">
+        <!-- Logo for mobile -->
+        <div class="flex items-center gap-2 mb-8 lg:hidden">
+          <div class="w-9 h-9 rounded-xl grad-primary flex items-center justify-center">
+            <i data-lucide="book-open" class="w-4 h-4 text-white"></i>
+          </div>
+          <span class="font-bold text-lg text-slate-800">CampusTalk</span>
+        </div>
+
+        <!-- Tab switch -->
+        <div class="flex bg-slate-100 rounded-xl p-1 mb-8">
+          <button id="tab-login" class="flex-1 py-2.5 text-sm font-semibold rounded-lg bg-white text-slate-800 card-shadow transition-all">登录</button>
+          <button id="tab-register" class="flex-1 py-2.5 text-sm font-medium rounded-lg text-slate-500 transition-all">注册</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="form-login">
+          <h1 class="text-2xl font-bold text-slate-900 mb-2">欢迎回来 👋</h1>
+          <p class="text-slate-500 text-sm mb-8">使用学号或用户名登录您的账号</p>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">学号 / 用户名</label>
+              <div class="relative">
+                <i data-lucide="user" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                <input type="text" placeholder="请输入学号或用户名" class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">密码</label>
+              <div class="relative">
+                <i data-lucide="lock" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                <input type="password" id="login-pwd" placeholder="请输入密码" class="w-full pl-10 pr-10 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" />
+                <button id="toggle-login-pwd" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                  <i data-lucide="eye" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+            <!-- Captcha placeholder -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">验证码</label>
+              <div class="flex gap-3">
+                <input type="text" placeholder="请输入验证码" class="flex-1 px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" />
+                <div class="w-28 h-12 rounded-xl bg-gradient-to-r from-primary-100 to-accent-100 flex items-center justify-center text-sm font-bold text-primary-600 tracking-widest cursor-pointer select-none border border-primary-200" id="captcha-display">A3K7</div>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="w-4 h-4 rounded accent-primary-500" />
+                <span class="text-sm text-slate-600">记住我</span>
+              </label>
+              <a href="#" class="text-sm text-primary-600 font-medium hover:text-primary-700">忘记密码？</a>
+            </div>
+            <button id="btn-login" class="w-full py-3.5 grad-primary text-white font-semibold rounded-xl text-sm hover:opacity-90 btn-hover card-shadow-lg">
+              登录账号
+            </button>
+          </div>
+          <div class="mt-6 text-center">
+            <span class="text-sm text-slate-500">还没有账号？</span>
+            <button id="goto-register" class="text-sm text-primary-600 font-semibold ml-1 hover:text-primary-700">立即注册</button>
+          </div>
+        </div>
+
+        <!-- Register Form -->
+        <div id="form-register" class="hidden">
+          <h1 class="text-2xl font-bold text-slate-900 mb-2">创建账号 🎓</h1>
+          <p class="text-slate-500 text-sm mb-8">加入我们的校园社区</p>
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">用户名</label>
+                <input type="text" placeholder="设置昵称" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">学号</label>
+                <input type="text" placeholder="输入学号" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">邮箱</label>
+              <div class="relative">
+                <i data-lucide="mail" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                <input type="email" placeholder="请输入学校邮箱" class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">密码</label>
+              <div class="relative">
+                <i data-lucide="lock" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                <input type="password" placeholder="至少8位" class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-600 mb-1.5 uppercase tracking-wide">确认密码</label>
+              <div class="relative">
+                <i data-lucide="shield-check" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                <input type="password" placeholder="再次输入密码" class="w-full pl-10 pr-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" />
+              </div>
+            </div>
+            <div>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" class="w-4 h-4 rounded accent-primary-500" />
+                <span class="text-sm text-slate-600">我已阅读并同意 <a href="#" class="text-primary-600 font-medium">《用户协议》</a> 和 <a href="#" class="text-primary-600 font-medium">《隐私政策》</a></span>
+              </label>
+            </div>
+            <button id="btn-register" class="w-full py-3.5 grad-primary text-white font-semibold rounded-xl text-sm hover:opacity-90 btn-hover card-shadow-lg">
+              注册账号
+            </button>
+          </div>
+          <div class="mt-6 text-center">
+            <span class="text-sm text-slate-500">已有账号？</span>
+            <button id="goto-login" class="text-sm text-primary-600 font-semibold ml-1 hover:text-primary-700">立即登录</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     MAIN LAYOUT WRAPPER (pages 2-8 share header)
+================================================================ -->
+<div id="page-main" class="page">
+  <!-- TOP NAVBAR -->
+  <nav class="sticky top-0 z-50 glass border-b border-slate-200/80" style="height:64px;">
+    <div class="desktop-wrapper h-full px-6 flex items-center gap-4">
+      <!-- Logo -->
+      <div class="flex items-center gap-2.5 cursor-pointer flex-shrink-0" id="nav-logo">
+        <div class="w-8 h-8 rounded-lg grad-primary flex items-center justify-center">
+          <i data-lucide="book-open" class="w-4 h-4 text-white"></i>
+        </div>
+        <span class="font-bold text-slate-800 text-base">CampusTalk</span>
+      </div>
+
+      <!-- Search bar -->
+      <div class="flex-1 max-w-md mx-4 relative">
+        <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+        <input type="text" placeholder="搜索帖子、用户、话题…" class="w-full pl-10 pr-4 py-2.5 bg-slate-100 border border-transparent rounded-xl text-sm focus:outline-none focus:bg-white focus:border-primary-300 focus:ring-2 focus:ring-primary-100 transition-all" />
+      </div>
+
+      <!-- Category filter pills -->
+      <div class="hidden xl:flex items-center gap-2">
+        <button class="nav-pill active-pill px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-primary-50 text-primary-600 border border-primary-200 transition-all">全部</button>
+        <button class="nav-pill px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-100 transition-all">技术</button>
+        <button class="nav-pill px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-100 transition-all">生活</button>
+        <button class="nav-pill px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-100 transition-all">学习</button>
+        <button class="nav-pill px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-100 transition-all">游戏</button>
+        <button class="nav-pill px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-500 hover:bg-slate-100 transition-all">提问</button>
+      </div>
+
+      <div class="flex-1"></div>
+
+      <!-- Publish button -->
+      <button id="nav-publish" class="hidden md:flex items-center gap-2 px-4 py-2 grad-primary text-white text-sm font-semibold rounded-xl btn-hover card-shadow">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+        <span>发帖</span>
+      </button>
+
+      <!-- Nav icons -->
+      <div class="flex items-center gap-1">
+        <!-- AI -->
+        <button class="nav-btn-icon relative p-2 rounded-xl hover:bg-slate-100 transition-all" data-page="ai">
+          <i data-lucide="sparkles" class="w-5 h-5 text-slate-500"></i>
+        </button>
+        <!-- Notification -->
+        <button class="nav-btn-icon relative p-2 rounded-xl hover:bg-slate-100 transition-all" data-page="notification">
+          <i data-lucide="bell" class="w-5 h-5 text-slate-500"></i>
+          <span class="notif-badge">3</span>
+        </button>
+        <!-- User avatar dropdown -->
+        <div class="relative ml-1" id="user-menu-wrapper">
+          <button id="user-avatar-btn" class="flex items-center gap-2 p-1 rounded-xl hover:bg-slate-100 transition-all">
+            <img src="https://i.pravatar.cc/36?img=10" class="w-8 h-8 rounded-full border-2 border-primary-200" alt="avatar" />
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-500"></i>
+          </button>
+          <!-- Dropdown -->
+          <div id="user-dropdown" class="dropdown-menu closed absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl card-shadow-lg border border-slate-100 py-2 z-50">
+            <div class="px-4 py-3 border-b border-slate-100">
+              <div class="font-semibold text-sm text-slate-800">小明同学</div>
+              <div class="text-xs text-slate-500 mt-0.5">2024届 · 计算机学院</div>
+            </div>
+            <div class="py-1">
+              <button class="dropdown-nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-all" data-page="profile">
+                <i data-lucide="user" class="w-4 h-4 text-slate-400"></i>个人中心
+              </button>
+              <button class="dropdown-nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-all" data-page="admin">
+                <i data-lucide="shield" class="w-4 h-4 text-slate-400"></i>管理后台
+              </button>
+              <button class="dropdown-nav-item w-full flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-slate-50 transition-all" data-page="course">
+                <i data-lucide="book" class="w-4 h-4 text-slate-400"></i>课程管理
+              </button>
+              <div class="border-t border-slate-100 my-1"></div>
+              <button id="btn-logout" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-all">
+                <i data-lucide="log-out" class="w-4 h-4"></i>退出登录
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BOTTOM TAB BAR (mobile) -->
+  <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-lg border-t border-slate-200 flex md:hidden">
+    <button class="tab-btn flex-1 flex flex-col items-center py-2.5 gap-1" data-page="home">
+      <i data-lucide="home" class="w-5 h-5 text-primary-600"></i>
+      <span class="text-xs text-primary-600 font-semibold">首页</span>
+    </button>
+    <button class="tab-btn flex-1 flex flex-col items-center py-2.5 gap-1" data-page="course">
+      <i data-lucide="book" class="w-5 h-5 text-slate-400"></i>
+      <span class="text-xs text-slate-400">课程</span>
+    </button>
+    <button class="tab-btn flex-1 flex flex-col items-center py-2.5 gap-1" data-page="publish">
+      <div class="w-10 h-10 grad-primary rounded-full flex items-center justify-center -mt-4 card-shadow">
+        <i data-lucide="plus" class="w-5 h-5 text-white"></i>
+      </div>
+      <span class="text-xs text-slate-400">发帖</span>
+    </button>
+    <button class="tab-btn flex-1 flex flex-col items-center py-2.5 gap-1" data-page="notification">
+      <div class="relative">
+        <i data-lucide="bell" class="w-5 h-5 text-slate-400"></i>
+        <span class="notif-badge">3</span>
+      </div>
+      <span class="text-xs text-slate-400">通知</span>
+    </button>
+    <button class="tab-btn flex-1 flex flex-col items-center py-2.5 gap-1" data-page="profile">
+      <i data-lucide="user" class="w-5 h-5 text-slate-400"></i>
+      <span class="text-xs text-slate-400">我的</span>
+    </button>
+  </div>
+
+  <!-- SUB-PAGES CONTAINER -->
+  <div id="sub-pages-container">
+
+    <!-- ============================================================
+         SUB-PAGE: HOME
+    ============================================================ -->
+    <div id="sub-home" class="sub-page active-sub">
+      <div class="desktop-wrapper px-6 py-6">
+        <div class="flex gap-6">
+          <!-- Main feed -->
+          <div class="flex-1 min-w-0">
+            <!-- Sort + filter bar -->
+            <div class="flex items-center justify-between mb-5">
+              <div class="flex items-center gap-1 bg-white rounded-xl p-1 card-shadow border border-slate-100">
+                <button class="sort-btn active-sort px-4 py-2 rounded-lg text-sm font-semibold text-primary-600 bg-primary-50 transition-all" data-sort="latest">
+                  <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5"></i>最新</span>
+                </button>
+                <button class="sort-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 transition-all" data-sort="hot">
+                  <span class="flex items-center gap-1.5"><i data-lucide="flame" class="w-3.5 h-3.5"></i>热门</span>
+                </button>
+                <button class="sort-btn px-4 py-2 rounded-lg text-sm font-medium text-slate-500 hover:bg-slate-50 transition-all" data-sort="follow">
+                  <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3.5 h-3.5"></i>关注</span>
+                </button>
+              </div>
+              <button class="flex items-center gap-1.5 text-sm text-slate-500 hover:text-primary-600 transition-colors">
+                <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>筛选
+              </button>
+            </div>
+
+            <!-- Post list -->
+            <div id="post-list" class="space-y-4">
+              <!-- Posts rendered by JS -->
+            </div>
+
+            <!-- Load more indicator -->
+            <div id="load-more-indicator" class="flex items-center justify-center py-8 gap-3">
+              <div class="w-5 h-5 border-2 border-primary-300 border-t-primary-600 rounded-full spinner"></div>
+              <span class="text-sm text-slate-400">加载更多…</span>
+            </div>
+          </div>
+
+          <!-- Right sidebar -->
+          <div class="hidden lg:flex flex-col gap-5 w-72 flex-shrink-0">
+            <!-- Announce banner -->
+            <div class="grad-primary rounded-2xl p-5 relative overflow-hidden card-shadow">
+              <div class="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-4 translate-x-4"></div>
+              <div class="relative">
+                <div class="text-white font-bold text-base mb-1">🎉 期末季来临</div>
+                <div class="text-white/70 text-xs leading-relaxed mb-4">论坛每日签到领福利，互帮互助共同备考！</div>
+                <button class="px-4 py-2 bg-white/20 text-white text-xs font-semibold rounded-lg hover:bg-white/30 transition-all border border-white/30">查看活动</button>
+              </div>
+            </div>
+
+            <!-- Hot topics -->
+            <div class="bg-white rounded-2xl p-5 card-shadow border border-slate-100">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-800 text-sm">🔥 热门话题</h3>
+                <button class="text-xs text-primary-500 font-medium hover:text-primary-700">更多</button>
+              </div>
+              <div class="space-y-3" id="hot-topics-list"></div>
+            </div>
+
+            <!-- Active users -->
+            <div class="bg-white rounded-2xl p-5 card-shadow border border-slate-100">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-800 text-sm">⚡ 活跃用户</h3>
+              </div>
+              <div class="space-y-3" id="active-users-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SUB-PAGE: POST DETAIL
+    ============================================================ -->
+    <div id="sub-detail" class="sub-page hidden">
+      <div class="desktop-wrapper px-6 py-6">
+        <div class="flex gap-6">
+          <div class="flex-1 min-w-0">
+            <!-- Back btn -->
+            <button id="btn-back-detail" class="flex items-center gap-2 text-sm text-slate-500 hover:text-primary-600 mb-5 transition-colors">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>返回列表
+            </button>
+
+            <!-- Post content card -->
+            <div class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden mb-5">
+              <div class="p-8">
+                <!-- Category + title -->
+                <div class="flex items-center gap-2 mb-3">
+                  <span class="badge-tech text-xs font-semibold px-2.5 py-1 rounded-lg">技术</span>
+                  <span class="badge-hot text-xs font-semibold px-2.5 py-1 rounded-lg">🔥 热门</span>
+                </div>
+                <h1 class="text-2xl font-bold text-slate-900 leading-tight mb-5">如何用 Python 写一个简单的校园课表爬虫？</h1>
+                <!-- Author info -->
+                <div class="flex items-center gap-3 mb-6 pb-6 border-b border-slate-100">
+                  <img src="https://i.pravatar.cc/44?img=15" class="w-11 h-11 rounded-full border-2 border-primary-100" alt="author" />
+                  <div>
+                    <div class="font-semibold text-sm text-slate-800">张梓轩</div>
+                    <div class="text-xs text-slate-400 mt-0.5">计算机学院 · 2024-01-15 14:30</div>
+                  </div>
+                  <button class="ml-auto px-4 py-1.5 border border-primary-300 text-primary-600 text-xs font-semibold rounded-lg hover:bg-primary-50 transition-all">+ 关注</button>
+                </div>
+
+                <!-- Content -->
+                <div class="prose-custom text-slate-700 text-sm leading-relaxed space-y-4">
+                  <p>最近期末了，想把课表自动同步到日历里，折腾了半天写了个小爬虫，分享给大家。</p>
+                  <h3 class="text-base font-bold text-slate-800">环境准备</h3>
+                  <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-green-400 overflow-x-auto">
+                    <div>pip install requests beautifulsoup4 icalendar</div>
+                  </div>
+                  <h3 class="text-base font-bold text-slate-800">核心代码</h3>
+                  <div class="bg-slate-900 rounded-xl p-4 font-mono text-xs text-slate-100 overflow-x-auto space-y-1">
+                    <div><span class="text-blue-400">import</span> requests</div>
+                    <div><span class="text-blue-400">from</span> bs4 <span class="text-blue-400">import</span> BeautifulSoup</div>
+                    <div>&nbsp;</div>
+                    <div><span class="text-yellow-400">def</span> <span class="text-green-400">get_schedule</span>(student_id, password):</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;session = requests.Session()</div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-slate-400"># 登录教务系统</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;login_url = <span class="text-orange-400">'https://jwxt.example.edu/login'</span></div>
+                    <div>&nbsp;&nbsp;&nbsp;&nbsp;...</div>
+                  </div>
+                  <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?w=800&q=80" class="w-full rounded-xl object-cover" style="max-height:320px;" alt="code" />
+                  <p>完整代码已上传 GitHub，欢迎 star 和 PR，有问题欢迎评论区交流！</p>
+                </div>
+              </div>
+
+              <!-- Action bar -->
+              <div class="flex items-center gap-4 px-8 py-4 bg-slate-50 border-t border-slate-100">
+                <button class="action-btn flex items-center gap-2 px-4 py-2.5 rounded-xl hover:bg-white transition-all group" data-action="like">
+                  <i data-lucide="thumbs-up" class="w-4 h-4 text-slate-400 group-hover:text-primary-500 transition-colors"></i>
+                  <span class="text-sm font-medium text-slate-500 group-hover:text-primary-500 action-count">248</span>
+                  <span class="text-sm text-slate-400">赞</span>
+                </button>
+                <button class="action-btn flex items-center gap-2 px-4 py-2.5 rounded-xl hover:bg-white transition-all group" data-action="collect">
+                  <i data-lucide="bookmark" class="w-4 h-4 text-slate-400 group-hover:text-accent-500 transition-colors"></i>
+                  <span class="text-sm font-medium text-slate-500 group-hover:text-accent-500 action-count">56</span>
+                  <span class="text-sm text-slate-400">收藏</span>
+                </button>
+                <button class="action-btn flex items-center gap-2 px-4 py-2.5 rounded-xl hover:bg-white transition-all group" data-action="share">
+                  <i data-lucide="share-2" class="w-4 h-4 text-slate-400 group-hover:text-emerald-500 transition-colors"></i>
+                  <span class="text-sm text-slate-400">分享</span>
+                </button>
+                <div class="ml-auto flex items-center gap-2 text-sm text-slate-400">
+                  <i data-lucide="eye" class="w-4 h-4"></i>
+                  <span>3,210 次阅读</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comments section -->
+            <div class="bg-white rounded-2xl card-shadow border border-slate-100 p-8">
+              <h3 class="font-bold text-slate-800 text-base mb-6">评论 <span class="text-slate-400 font-normal text-sm">(42)</span></h3>
+
+              <!-- Comment input -->
+              <div class="flex gap-3 mb-8 pb-8 border-b border-slate-100">
+                <img src="https://i.pravatar.cc/36?img=10" class="w-9 h-9 rounded-full flex-shrink-0" alt="me" />
+                <div class="flex-1">
+                  <textarea placeholder="说点什么…" class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm resize-none focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100 transition-all" rows="3"></textarea>
+                  <div class="flex justify-end mt-2">
+                    <button class="px-5 py-2 grad-primary text-white text-sm font-semibold rounded-xl hover:opacity-90 btn-hover">发表评论</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Comment list -->
+              <div id="comment-list" class="space-y-6"></div>
+            </div>
+          </div>
+
+          <!-- Right sidebar -->
+          <div class="hidden lg:block w-64 flex-shrink-0">
+            <div class="sticky top-20 space-y-4">
+              <div class="bg-white rounded-2xl p-5 card-shadow border border-slate-100">
+                <h4 class="font-semibold text-sm text-slate-700 mb-3">相关帖子</h4>
+                <div class="space-y-3" id="related-posts"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SUB-PAGE: PUBLISH
+    ============================================================ -->
+    <div id="sub-publish" class="sub-page hidden">
+      <div class="desktop-wrapper px-6 py-6 max-w-4xl">
+        <div class="flex items-center gap-3 mb-6">
+          <button id="btn-back-publish" class="p-2 rounded-xl hover:bg-slate-100 transition-all">
+            <i data-lucide="arrow-left" class="w-5 h-5 text-slate-500"></i>
+          </button>
+          <h2 class="text-xl font-bold text-slate-900">发布新帖子</h2>
+        </div>
+
+        <div class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden">
+          <!-- Title -->
+          <div class="p-6 border-b border-slate-100">
+            <input type="text" placeholder="写下吸引人的标题…（最多100字）" class="w-full text-xl font-bold text-slate-800 placeholder-slate-300 focus:outline-none" />
+          </div>
+
+          <!-- Category & tags row -->
+          <div class="px-6 py-4 border-b border-slate-100 flex flex-wrap items-center gap-3">
+            <span class="text-sm text-slate-400 flex items-center gap-1"><i data-lucide="tag" class="w-3.5 h-3.5"></i>分类：</span>
+            <div class="flex flex-wrap gap-2" id="category-selector">
+              <button class="cat-btn active-cat px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary-50 text-primary-600 border border-primary-200 transition-all">技术</button>
+              <button class="cat-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-500 hover:bg-primary-50 hover:text-primary-600 transition-all">生活</button>
+              <button class="cat-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-500 hover:bg-primary-50 hover:text-primary-600 transition-all">学习</button>
+              <button class="cat-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-500 hover:bg-primary-50 hover:text-primary-600 transition-all">游戏</button>
+              <button class="cat-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-500 hover:bg-primary-50 hover:text-primary-600 transition-all">提问</button>
+              <button class="cat-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 text-slate-500 hover:bg-primary-50 hover:text-primary-600 transition-all">新闻</button>
+            </div>
+          </div>
+
+          <!-- Rich text toolbar -->
+          <div class="editor-toolbar px-4 py-2 border-b border-slate-100 flex flex-wrap gap-1">
+            <button title="粗体"><i data-lucide="bold" class="w-4 h-4"></i></button>
+            <button title="斜体"><i data-lucide="italic" class="w-4 h-4"></i></button>
+            <button title="下划线"><i data-lucide="underline" class="w-4 h-4"></i></button>
+            <div class="w-px h-6 bg-slate-200 mx-1 self-center"></div>
+            <button title="有序列表"><i data-lucide="list-ordered" class="w-4 h-4"></i></button>
+            <button title="无序列表"><i data-lucide="list" class="w-4 h-4"></i></button>
+            <button title="引用"><i data-lucide="quote" class="w-4 h-4"></i></button>
+            <button title="代码块"><i data-lucide="code-2" class="w-4 h-4"></i></button>
+            <div class="w-px h-6 bg-slate-200 mx-1 self-center"></div>
+            <button title="插入链接"><i data-lucide="link" class="w-4 h-4"></i></button>
+            <button title="插入表格"><i data-lucide="table" class="w-4 h-4"></i></button>
+            <div class="w-px h-6 bg-slate-200 mx-1 self-center"></div>
+            <button title="上传图片" id="toolbar-img-btn"><i data-lucide="image" class="w-4 h-4"></i></button>
+          </div>
+
+          <!-- Editor area -->
+          <div id="editor-content" contenteditable="true" data-placeholder="在这里写下你的内容，支持 Markdown 语法…" class="px-6 py-5 min-h-64 text-sm text-slate-700 leading-relaxed focus:outline-none" style="min-height:280px;"></div>
+
+          <!-- Image upload area -->
+          <div class="px-6 pb-6">
+            <div id="image-upload-area" class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center cursor-pointer hover:border-primary-300 hover:bg-primary-50/30 transition-all">
+              <input type="file" id="img-upload-input" accept="image/*" multiple class="hidden" />
+              <i data-lucide="image-plus" class="w-8 h-8 text-slate-300 mx-auto mb-2"></i>
+              <p class="text-sm text-slate-400">点击或拖拽上传图片</p>
+              <p class="text-xs text-slate-300 mt-1">支持 JPG, PNG, GIF · 单张最大 10MB</p>
+            </div>
+            <div id="uploaded-images" class="flex flex-wrap gap-3 mt-4"></div>
+          </div>
+        </div>
+
+        <!-- Submit bar -->
+        <div class="flex items-center justify-between mt-5">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="w-4 h-4 rounded accent-primary-500" />
+            <span class="text-sm text-slate-600">匿名发布</span>
+          </label>
+          <div class="flex gap-3">
+            <button class="px-6 py-2.5 border border-slate-200 text-slate-600 text-sm font-medium rounded-xl hover:bg-slate-50 transition-all">存草稿</button>
+            <button id="btn-submit-post" class="px-8 py-2.5 grad-primary text-white text-sm font-semibold rounded-xl hover:opacity-90 btn-hover card-shadow">发布帖子</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SUB-PAGE: PROFILE
+    ============================================================ -->
+    <div id="sub-profile" class="sub-page hidden">
+      <div class="desktop-wrapper px-6 py-6">
+        <!-- Profile header card -->
+        <div class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden mb-6">
+          <div class="h-32 grad-primary relative">
+            <button class="absolute top-4 right-4 p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-all">
+              <i data-lucide="camera" class="w-4 h-4 text-white"></i>
+            </button>
+          </div>
+          <div class="px-8 pb-8">
+            <div class="flex items-end gap-4 -mt-10 mb-5">
+              <div class="relative">
+                <img src="https://i.pravatar.cc/88?img=10" class="w-22 h-22 rounded-2xl border-4 border-white card-shadow" style="width:88px;height:88px;" alt="avatar" />
+                <button id="btn-upload-avatar" class="absolute -bottom-1 -right-1 w-8 h-8 bg-primary-500 rounded-xl flex items-center justify-center hover:bg-primary-600 transition-all card-shadow">
+                  <i data-lucide="camera" class="w-3.5 h-3.5 text-white"></i>
+                </button>
+              </div>
+              <div class="mb-2 flex-1">
+                <h2 class="text-xl font-bold text-slate-900">小明同学</h2>
+                <p class="text-sm text-slate-500 mt-0.5">计算机学院 · 2024届 · 学号 20241001</p>
+              </div>
+              <button class="flex items-center gap-2 px-4 py-2.5 border border-slate-200 text-slate-600 text-sm font-medium rounded-xl hover:bg-slate-50 transition-all">
+                <i data-lucide="edit-3" class="w-4 h-4"></i>编辑资料
+              </button>
+            </div>
+
+            <!-- Stats row -->
+            <div class="flex gap-6 mb-5">
+              <div class="text-center">
+                <div class="text-lg font-bold text-slate-900">47</div>
+                <div class="text-xs text-slate-400">帖子</div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-bold text-slate-900">1,280</div>
+                <div class="text-xs text-slate-400">获赞</div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-bold text-slate-900">356</div>
+                <div class="text-xs text-slate-400">关注者</div>
+              </div>
+              <div class="text-center">
+                <div class="text-lg font-bold text-slate-900">89</div>
+                <div class="text-xs text-slate-400">关注中</div>
+              </div>
+            </div>
+
+            <p class="text-sm text-slate-600 leading-relaxed">热爱编程，喜欢分享技术干货。正在学习 AI/ML，欢迎一起交流 🚀</p>
+          </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden">
+          <div class="flex border-b border-slate-100">
+            <button class="profile-tab tab-active flex-1 py-4 text-sm text-center transition-all" data-tab="my-posts">我的帖子</button>
+            <button class="profile-tab flex-1 py-4 text-sm text-slate-500 text-center hover:text-slate-700 transition-all" data-tab="my-replies">我的回复</button>
+            <button class="profile-tab flex-1 py-4 text-sm text-slate-500 text-center hover:text-slate-700 transition-all" data-tab="my-favorites">我的收藏</button>
+          </div>
+          <div class="p-6">
+            <div id="profile-tab-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SUB-PAGE: AI CHAT
+    ============================================================ -->
+    <div id="sub-ai" class="sub-page hidden">
+      <div class="desktop-wrapper flex" style="height: calc(100vh - 64px);">
+        <!-- Sidebar: session list -->
+        <div class="w-64 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col hidden md:flex">
+          <div class="p-4 border-b border-slate-100">
+            <button class="w-full flex items-center justify-center gap-2 py-2.5 grad-primary text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-all">
+              <i data-lucide="plus" class="w-4 h-4"></i>新建对话
+            </button>
+          </div>
+          <div class="flex-1 overflow-y-auto p-3 space-y-1">
+            <div class="text-xs font-semibold text-slate-400 px-2 py-1 uppercase tracking-wide">今天</div>
+            <div class="p-3 rounded-xl bg-primary-50 border border-primary-100 cursor-pointer">
+              <div class="text-sm font-semibold text-primary-700 truncate">Python 爬虫怎么写？</div>
+              <div class="text-xs text-slate-400 mt-0.5">今天 14:30</div>
+            </div>
+            <div class="p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-all">
+              <div class="text-sm font-medium text-slate-600 truncate">期末考试怎么复习</div>
+              <div class="text-xs text-slate-400 mt-0.5">今天 10:15</div>
+            </div>
+            <div class="text-xs font-semibold text-slate-400 px-2 py-1 mt-2 uppercase tracking-wide">昨天</div>
+            <div class="p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-all">
+              <div class="text-sm font-medium text-slate-600 truncate">帮我写一篇实验报告</div>
+              <div class="text-xs text-slate-400 mt-0.5">昨天 21:00</div>
+            </div>
+            <div class="p-3 rounded-xl hover:bg-slate-50 cursor-pointer transition-all">
+              <div class="text-sm font-medium text-slate-600 truncate">React hooks 使用方法</div>
+              <div class="text-xs text-slate-400 mt-0.5">昨天 15:30</div>
+            </div>
+          </div>
+          <!-- AI Image generation entry -->
+          <div class="p-4 border-t border-slate-100">
+            <button class="w-full flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-violet-50 to-pink-50 border border-violet-200 hover:from-violet-100 hover:to-pink-100 transition-all">
+              <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center flex-shrink-0">
+                <i data-lucide="image" class="w-4 h-4 text-white"></i>
+              </div>
+              <div class="text-left">
+                <div class="text-xs font-semibold text-violet-700">AI 图片生成</div>
+                <div class="text-xs text-slate-400">输入描述生成图片</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat area -->
+        <div class="flex-1 flex flex-col min-w-0 bg-slate-50">
+          <!-- Chat header -->
+          <div class="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
+                <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+              </div>
+              <div>
+                <div class="font-semibold text-slate-800 text-sm">Campus AI 助手</div>
+                <div class="flex items-center gap-1.5 text-xs text-slate-400">
+                  <div class="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>在线
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <button class="p-2 rounded-xl hover:bg-slate-100 transition-all"><i data-lucide="refresh-cw" class="w-4 h-4 text-slate-400"></i></button>
+              <button class="p-2 rounded-xl hover:bg-slate-100 transition-all"><i data-lucide="more-horizontal" class="w-4 h-4 text-slate-400"></i></button>
+            </div>
+          </div>
+
+          <!-- Messages -->
+          <div class="flex-1 overflow-y-auto px-6 py-6 space-y-5" id="chat-messages"></div>
+
+          <!-- Quick prompts -->
+          <div class="px-6 pb-3 flex flex-wrap gap-2" id="quick-prompts">
+            <button class="quick-prompt-btn px-3 py-1.5 bg-white border border-slate-200 text-xs text-slate-600 rounded-lg hover:border-primary-300 hover:text-primary-600 transition-all card-shadow">📚 帮我总结知识点</button>
+            <button class="quick-prompt-btn px-3 py-1.5 bg-white border border-slate-200 text-xs text-slate-600 rounded-lg hover:border-primary-300 hover:text-primary-600 transition-all card-shadow">💻 代码帮我写</button>
+            <button class="quick-prompt-btn px-3 py-1.5 bg-white border border-slate-200 text-xs text-slate-600 rounded-lg hover:border-primary-300 hover:text-primary-600 transition-all card-shadow">📝 帮我写作文</button>
+            <button class="quick-prompt-btn px-3 py-1.5 bg-white border border-slate-200 text-xs text-slate-600 rounded-lg hover:border-primary-300 hover:text-primary-600 transition-all card-shadow">🎨 生成图片</button>
+          </div>
+
+          <!-- Input area -->
+          <div class="px-6 pb-6">
+            <div class="bg-white rounded-2xl card-shadow border border-slate-200 flex items-end gap-3 p-3">
+              <button class="p-2 rounded-xl hover:bg-slate-100 transition-all flex-shrink-0">
+                <i data-lucide="paperclip" class="w-4 h-4 text-slate-400"></i>
+              </button>
+              <textarea id="chat-input" placeholder="向 AI 提问…" rows="1" class="flex-1 text-sm text-slate-700 resize-none focus:outline-none max-h-32 bg-transparent" style="min-height:36px;"></textarea>
+              <button id="btn-send-chat" class="p-2.5 grad-primary rounded-xl flex-shrink-0 hover:opacity-90 transition-all btn-hover">
+                <i data-lucide="send" class="w-4 h-4 text-white"></i>
+              </button>
+            </div>
+            <p class="text-xs text-slate-400 text-center mt-2">AI 回复仅供参考，请自行判断内容准确性</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SUB-PAGE: NOTIFICATION
+    ============================================================ -->
+    <div id="sub-notification" class="sub-page hidden">
+      <div class="desktop-wrapper px-6 py-6 max-w-3xl">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-xl font-bold text-slate-900">通知中心</h2>
+          <button class="text-sm text-primary-600 font-medium hover:text-primary-700">全部标为已读</button>
+        </div>
+
+        <!-- Filter tabs -->
+        <div class="flex gap-2 mb-5">
+          <button class="notif-filter active-filter px-4 py-2 bg-primary-50 text-primary-600 text-sm font-semibold rounded-xl border border-primary-200 transition-all">全部</button>
+          <button class="notif-filter px-4 py-2 bg-white text-slate-500 text-sm font-medium rounded-xl border border-slate-200 hover:border-primary-300 transition-all">点赞</button>
+          <button class="notif-filter px-4 py-2 bg-white text-slate-500 text-sm font-medium rounded-xl border border-slate-200 hover:border-primary-300 transition-all">回复</button>
+          <button class="notif-filter px-4 py-2 bg-white text-slate-500 text-sm font-medium rounded-xl border border-slate-200 hover:border-primary-300 transition-all">系统</button>
+        </div>
+
+        <div class="space-y-3" id="notification-list"></div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SUB-PAGE: ADMIN
+    ============================================================ -->
+    <div id="sub-admin" class="sub-page hidden">
+      <div class="desktop-wrapper flex" style="min-height: calc(100vh - 64px);">
+        <!-- Admin sidebar -->
+        <div class="w-56 flex-shrink-0 bg-white border-r border-slate-100 py-6 px-3">
+          <div class="text-xs font-semibold text-slate-400 px-3 mb-3 uppercase tracking-wide">总览</div>
+          <div class="admin-nav-item active" data-admin-section="dashboard"><i data-lucide="layout-dashboard"></i>数据看板</div>
+          <div class="text-xs font-semibold text-slate-400 px-3 mt-5 mb-3 uppercase tracking-wide">管理</div>
+          <div class="admin-nav-item" data-admin-section="users"><i data-lucide="users"></i>用户管理</div>
+          <div class="admin-nav-item" data-admin-section="posts"><i data-lucide="file-text"></i>帖子管理</div>
+          <div class="admin-nav-item" data-admin-section="reports"><i data-lucide="flag"></i>举报处理</div>
+          <div class="text-xs font-semibold text-slate-400 px-3 mt-5 mb-3 uppercase tracking-wide">系统</div>
+          <div class="admin-nav-item" data-admin-section="settings"><i data-lucide="settings"></i>系统设置</div>
+        </div>
+
+        <!-- Admin content -->
+        <div class="flex-1 p-8 overflow-y-auto" id="admin-content">
+          <!-- Dashboard content rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         SUB-PAGE: COURSE
+    ============================================================ -->
+    <div id="sub-course" class="sub-page hidden">
+      <div class="desktop-wrapper px-6 py-6">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">课程管理</h2>
+            <p class="text-sm text-slate-400 mt-1">当前学期：2024-2025 第一学期</p>
+          </div>
+          <button class="flex items-center gap-2 px-5 py-2.5 grad-primary text-white text-sm font-semibold rounded-xl btn-hover card-shadow">
+            <i data-lucide="plus" class="w-4 h-4"></i>添加课程
+          </button>
+        </div>
+
+        <!-- My schedule quick view -->
+        <div class="bg-white rounded-2xl card-shadow border border-slate-100 p-6 mb-6">
+          <h3 class="font-bold text-slate-800 text-sm mb-4">📅 本周课表</h3>
+          <div class="grid grid-cols-5 gap-2" id="weekly-schedule"></div>
+        </div>
+
+        <!-- Course list -->
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="course-list"></div>
+      </div>
+    </div>
+
+  </div><!-- end sub-pages-container -->
+</div><!-- end page-main -->
+
+<!-- ================================================================
+     SCRIPTS
+================================================================ -->
+<script src="app.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+  // ============================
+  // UTILITY FUNCTIONS
+  // ============================
+
+  function showToast(msg, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const icons = { success: 'check-circle', error: 'x-circle', info: 'info' };
+    const toast = document.createElement('div');
+    toast.className = 'toast toast-' + type;
+    const iconEl = document.createElement('i');
+    iconEl.setAttribute('data-lucide', icons[type]);
+    iconEl.style.cssText = 'width:18px;height:18px;flex-shrink:0;';
+    toast.appendChild(iconEl);
+    const text = document.createElement('span');
+    text.textContent = msg;
+    toast.appendChild(text);
+    container.appendChild(toast);
+    lucide.createIcons({ nodes: [iconEl] });
+    const timer = setTimeout(function () {
+      toast.classList.add('hide');
+      setTimeout(function () { toast.remove(); }, 300);
+    }, 3000);
+    toast._timer = timer;
+  }
+
+  function formatNumber(n) {
+    if (n >= 10000) return (n / 10000).toFixed(1) + 'w';
+    if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+    return String(n);
+  }
+
+  function randomInt(a, b) { return Math.floor(Math.random() * (b - a + 1)) + a; }
+
+  function timeAgo(minutes) {
+    if (minutes < 60) return minutes + ' 分钟前';
+    if (minutes < 1440) return Math.floor(minutes / 60) + ' 小时前';
+    return Math.floor(minutes / 1440) + ' 天前';
+  }
+
+  // ============================
+  // PAGE NAVIGATION
+  // ============================
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active'); });
+    const target = document.getElementById('page-' + id);
+    if (target) target.classList.add('active');
+    lucide.createIcons();
+  }
+
+  function showSubPage(id) {
+    document.querySelectorAll('.sub-page').forEach(function (p) {
+      p.classList.remove('active-sub');
+      p.classList.add('hidden');
+    });
+    const target = document.getElementById('sub-' + id);
+    if (target) {
+      target.classList.remove('hidden');
+      target.classList.add('active-sub');
+    }
+    // Close dropdown
+    closeDropdown();
+    lucide.createIcons();
+  }
+
+  // Nav icon buttons
+  document.querySelectorAll('.nav-btn-icon').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const page = this.getAttribute('data-page');
+      showSubPage(page);
+    });
+  });
+
+  // Bottom tab bar
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      showSubPage(this.getAttribute('data-page'));
+    });
+  });
+
+  // Dropdown nav items
+  document.querySelectorAll('.dropdown-nav-item').forEach(function (item) {
+    item.addEventListener('click', function () {
+      showSubPage(this.getAttribute('data-page'));
+    });
+  });
+
+  // Logo → home
+  document.getElementById('nav-logo').addEventListener('click', function () { showSubPage('home'); });
+
+  // Nav publish button
+  document.getElementById('nav-publish').addEventListener('click', function () { showSubPage('publish'); });
+
+  // ============================
+  // USER DROPDOWN
+  // ============================
+
+  const userDropdown = document.getElementById('user-dropdown');
+
+  function openDropdown() { userDropdown.classList.remove('closed'); userDropdown.classList.add('open'); }
+  function closeDropdown() { userDropdown.classList.remove('open'); userDropdown.classList.add('closed'); }
+
+  document.getElementById('user-avatar-btn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    userDropdown.classList.contains('open') ? closeDropdown() : openDropdown();
+  });
+
+  document.addEventListener('click', function () { closeDropdown(); });
+  userDropdown.addEventListener('click', function (e) { e.stopPropagation(); });
+
+  // Logout
+  document.getElementById('btn-logout').addEventListener('click', function () {
+    showToast('已退出登录', 'info');
+    setTimeout(function () { showPage('auth'); }, 800);
+  });
+
+  // ============================
+  // AUTH PAGE
+  // ============================
+
+  const tabLogin = document.getElementById('tab-login');
+  const tabRegister = document.getElementById('tab-register');
+  const formLogin = document.getElementById('form-login');
+  const formRegister = document.getElementById('form-register');
+
+  function switchToLogin() {
+    tabLogin.classList.add('bg-white', 'text-slate-800', 'card-shadow');
+    tabLogin.classList.remove('text-slate-500');
+    tabRegister.classList.remove('bg-white', 'text-slate-800', 'card-shadow');
+    tabRegister.classList.add('text-slate-500');
+    formLogin.classList.remove('hidden');
+    formRegister.classList.add('hidden');
+  }
+
+  function switchToRegister() {
+    tabRegister.classList.add('bg-white', 'text-slate-800', 'card-shadow');
+    tabRegister.classList.remove('text-slate-500');
+    tabLogin.classList.remove('bg-white', 'text-slate-800', 'card-shadow');
+    tabLogin.classList.add('text-slate-500');
+    formRegister.classList.remove('hidden');
+    formLogin.classList.add('hidden');
+  }
+
+  tabLogin.addEventListener('click', switchToLogin);
+  tabRegister.addEventListener('click', switchToRegister);
+  document.getElementById('goto-register').addEventListener('click', switchToRegister);
+  document.getElementById('goto-login').addEventListener('click', switchToLogin);
+
+  // Toggle password visibility
+  document.getElementById('toggle-login-pwd').addEventListener('click', function () {
+    const input = document.getElementById('login-pwd');
+    input.type = input.type === 'password' ? 'text' : 'password';
+    const icon = this.querySelector('i');
+    icon.setAttribute('data-lucide', input.type === 'password' ? 'eye' : 'eye-off');
+    lucide.createIcons({ nodes: [icon] });
+  });
+
+  // Captcha refresh
+  document.getElementById('captcha-display').addEventListener('click', function () {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 4; i++) code += chars[randomInt(0, chars.length - 1)];
+    this.textContent = code;
+  });
+
+  // Login button
+  document.getElementById('btn-login').addEventListener('click', function () {
+    showPage('main');
+    showSubPage('home');
+    showToast('登录成功，欢迎回来！', 'success');
+    setTimeout(initAllPages, 100);
+  });
+
+  // Register button
+  document.getElementById('btn-register').addEventListener('click', function () {
+    showPage('main');
+    showSubPage('home');
+    showToast('注册成功，欢迎加入 CampusTalk！🎉', 'success');
+    setTimeout(initAllPages, 100);
+  });
+
+  // ============================
+  // POST DATA
+  // ============================
+
+  const categories = ['技术', '生活', '学习', '游戏', '提问', '新闻'];
+  const categoryBadge = { '技术': 'badge-tech', '生活': 'badge-life', '学习': 'badge-study', '游戏': 'badge-game', '提问': 'badge-question', '新闻': 'badge-news' };
+
+  const postTitles = [
+    '如何高效备战期末？这些方法让我绩点 4.0 😎',
+    '分享一个超好用的在线笔记工具，学习效率翻倍！',
+    '【讨论】计算机专业就业前景怎么样？',
+    '宿舍卧谈会：你们最难忘的大学经历是什么？',
+    '自习室抢座攻略 2024 完整版，人手一份！',
+    '用 Next.js 搭建个人博客全过程记录',
+    '今日食堂新出的黑椒牛肉饭，绝绝子！',
+    '求推荐：数据结构有没有好的参考书？',
+    '校内咖啡厅评测 TOP5，奶茶控必看',
+    '英语四六级高频词汇 1000 个整理版',
+    '【游戏】原神期末考试版本讨论帖',
+    'GitHub 上最实用的开源项目推荐',
+  ];
+
+  const avatarIds = [1,2,3,4,5,6,7,8,9,11,12,13,14,15,16,17,18,19,20];
+  const nicknames = ['张梓轩','李若涵','王晓明','陈欣然','赵思远','刘佳欣','孙浩天','周雨桐','吴启航','郑雪梅'];
+  const colleges = ['计算机学院','经管学院','外语学院','理学院','艺术学院'];
+  const unsplashIds = ['photo-1555949963-aa79dcee981c','photo-1516321318423-f06f85e504b3','photo-1498050108023-c5249f4df085','photo-1527430253228-e93688616381','photo-1546410531-bb4caa6b424d'];
+
+  let postData = [];
+  let likedPosts = new Set();
+  let collectedPosts = new Set();
+
+  function generatePosts(count, offset) {
+    const posts = [];
+    for (let i = 0; i < count; i++) {
+      const idx = (offset + i) % postTitles.length;
+      const avatarId = avatarIds[(offset + i) % avatarIds.length];
+      const hasImage = Math.random() > 0.5;
+      posts.push({
+        id: offset + i + 1,
+        title: postTitles[idx],
+        category: categories[(offset + i) % categories.length],
+        author: nicknames[(offset + i) % nicknames.length],
+        college: colleges[(offset + i) % colleges.length],
+        avatarId: avatarId,
+        likes: randomInt(10, 500),
+        replies: randomInt(3, 80),
+        favorites: randomInt(5, 120),
+        views: randomInt(200, 5000),
+        time: timeAgo(randomInt(5, 10000)),
+        hasImage: hasImage,
+        imageId: unsplashIds[randomInt(0, unsplashIds.length - 1)],
+        liked: false,
+        collected: false,
+      });
+    }
+    return posts;
+  }
+
+  // ============================
+  // HOME PAGE
+  // ============================
+
+  let loadedCount = 0;
+  let isLoading = false;
+  let loadMoreTimer = null;
+
+  function createPostCard(post) {
+    const div = document.createElement('div');
+    div.className = 'post-card bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden cursor-pointer hover:border-primary-200 transition-all';
+    div.setAttribute('data-id', post.id);
+
+    const catClass = categoryBadge[post.category] || 'badge-tech';
+    const isLiked = likedPosts.has(post.id);
+    const isCollected = collectedPosts.has(post.id);
+
+    let imgHtml = '';
+    if (post.hasImage) {
+      imgHtml = '<img src="https://images.unsplash.com/' + post.imageId + '?w=600&q=70" class="w-full object-cover rounded-xl mb-4" style="height:180px;" alt="post image" />';
+    }
+
+    div.innerHTML = '<div class="p-5">'
+      + '<div class="flex items-start gap-3">'
+        + '<img src="https://i.pravatar.cc/40?img=' + post.avatarId + '" class="w-10 h-10 rounded-full flex-shrink-0 border-2 border-slate-100" alt="avatar" />'
+        + '<div class="flex-1 min-w-0">'
+          + '<div class="flex items-center gap-2 mb-1.5">'
+            + '<span class="font-semibold text-slate-800 text-sm">' + post.author + '</span>'
+            + '<span class="text-slate-300 text-xs">·</span>'
+            + '<span class="text-xs text-slate-400">' + post.college + '</span>'
+            + '<span class="text-slate-300 text-xs ml-auto">·</span>'
+            + '<span class="text-xs text-slate-400">' + post.time + '</span>'
+          + '</div>'
+          + '<div class="flex items-center gap-2 mb-3">'
+            + '<span class="' + catClass + ' text-xs font-semibold px-2 py-0.5 rounded-md">' + post.category + '</span>'
+          + '</div>'
+          + '<h3 class="font-semibold text-slate-900 text-sm leading-snug mb-3">' + post.title + '</h3>'
+          + imgHtml
+          + '<div class="flex items-center gap-4">'
+            + '<button class="post-like-btn flex items-center gap-1.5 text-xs ' + (isLiked ? 'text-primary-600' : 'text-slate-400') + ' hover:text-primary-600 transition-colors" data-id="' + post.id + '">'
+              + '<i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i>'
+              + '<span class="post-like-count">' + (isLiked ? post.likes + 1 : post.likes) + '</span>'
+            + '</button>'
+            + '<button class="flex items-center gap-1.5 text-xs text-slate-400 hover:text-primary-600 transition-colors">'
+              + '<i data-lucide="message-circle" class="w-3.5 h-3.5"></i>'
+              + '<span>' + post.replies + '</span>'
+            + '</button>'
+            + '<button class="post-collect-btn flex items-center gap-1.5 text-xs ' + (isCollected ? 'text-accent-500' : 'text-slate-400') + ' hover:text-accent-500 transition-colors" data-id="' + post.id + '">'
+              + '<i data-lucide="bookmark" class="w-3.5 h-3.5"></i>'
+              + '<span class="post-collect-count">' + (isCollected ? post.favorites + 1 : post.favorites) + '</span>'
+            + '</button>'
+            + '<span class="ml-auto flex items-center gap-1 text-xs text-slate-300"><i data-lucide="eye" class="w-3 h-3"></i>' + formatNumber(post.views) + '</span>'
+          + '</div>'
+        + '</div>'
+      + '</div>'
+    + '</div>';
+
+    return div;
+  }
+
+  function renderPosts(posts, append) {
+    const list = document.getElementById('post-list');
+    if (!append) list.innerHTML = '';
+    posts.forEach(function (post) {
+      const card = createPostCard(post);
+      list.appendChild(card);
+    });
+    lucide.createIcons();
+    // Bind click events
+    list.querySelectorAll('.post-card').forEach(function (card) {
+      card.addEventListener('click', function (e) {
+        if (e.target.closest('.post-like-btn') || e.target.closest('.post-collect-btn')) return;
+        showSubPage('detail');
+      });
+    });
+    // Like buttons
+    list.querySelectorAll('.post-like-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const id = parseInt(this.getAttribute('data-id'));
+        const countEl = this.querySelector('.post-like-count');
+        const iconEl = this.querySelector('i');
+        if (likedPosts.has(id)) {
+          likedPosts.delete(id);
+          this.classList.remove('text-primary-600');
+          this.classList.add('text-slate-400');
+          countEl.textContent = parseInt(countEl.textContent) - 1;
+        } else {
+          likedPosts.add(id);
+          this.classList.add('text-primary-600');
+          this.classList.remove('text-slate-400');
+          countEl.textContent = parseInt(countEl.textContent) + 1;
+          iconEl.classList.add('like-pop');
+          iconEl.addEventListener('animationend', function () { iconEl.classList.remove('like-pop'); }, { once: true });
+        }
+      });
+    });
+    // Collect buttons
+    list.querySelectorAll('.post-collect-btn').forEach(function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const id = parseInt(this.getAttribute('data-id'));
+        const countEl = this.querySelector('.post-collect-count');
+        const iconEl = this.querySelector('i');
+        if (collectedPosts.has(id)) {
+          collectedPosts.delete(id);
+          this.classList.remove('text-accent-500');
+          this.classList.add('text-slate-400');
+          countEl.textContent = parseInt(countEl.textContent) - 1;
+        } else {
+          collectedPosts.add(id);
+          this.classList.add('text-accent-500');
+          this.classList.remove('text-slate-400');
+          countEl.textContent = parseInt(countEl.textContent) + 1;
+          iconEl.classList.add('like-pop');
+          showToast('收藏成功！', 'success');
+          iconEl.addEventListener('animationend', function () { iconEl.classList.remove('like-pop'); }, { once: true });
+        }
+      });
+    });
+  }
+
+  function loadMorePosts() {
+    if (isLoading) return;
+    isLoading = true;
+    clearTimeout(loadMoreTimer);
+    loadMoreTimer = setTimeout(function () {
+      const newPosts = generatePosts(6, loadedCount);
+      postData = postData.concat(newPosts);
+      renderPosts(newPosts, true);
+      loadedCount += 6;
+      isLoading = false;
+    }, 800);
+  }
+
+  function initHomePage() {
+    postData = generatePosts(8, 0);
+    loadedCount = 8;
+    renderPosts(postData, false);
+
+    // Hot topics
+    const topics = ['#Python爬虫', '#期末备考', '#宿舍神器', '#实习分享', '#代码求助', '#校园美食'];
+    const topicCounts = [1240, 890, 756, 623, 548, 432];
+    const topicList = document.getElementById('hot-topics-list');
+    topicList.innerHTML = '';
+    topics.forEach(function (t, i) {
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-3 cursor-pointer group';
+      div.innerHTML = '<div class="w-6 h-6 rounded-lg flex items-center justify-center text-xs font-bold flex-shrink-0 ' + (i < 3 ? 'bg-primary-500 text-white' : 'bg-slate-100 text-slate-500') + '">' + (i + 1) + '</div>'
+        + '<div class="flex-1 min-w-0"><div class="text-sm font-medium text-slate-700 group-hover:text-primary-600 transition-colors truncate">' + t + '</div>'
+        + '<div class="text-xs text-slate-400">' + topicCounts[i] + ' 讨论</div></div>';
+      topicList.appendChild(div);
+    });
+
+    // Active users
+    const users = [
+      { name: '张梓轩', posts: 47, img: 15 },
+      { name: '李若涵', posts: 36, img: 11 },
+      { name: '王晓明', posts: 29, img: 3 },
+      { name: '陈欣然', posts: 24, img: 9 },
+    ];
+    const userList = document.getElementById('active-users-list');
+    userList.innerHTML = '';
+    users.forEach(function (u) {
+      const div = document.createElement('div');
+      div.className = 'flex items-center gap-3';
+      div.innerHTML = '<img src="https://i.pravatar.cc/32?img=' + u.img + '" class="w-8 h-8 rounded-full flex-shrink-0" alt="user" />'
+        + '<div class="flex-1"><div class="text-sm font-medium text-slate-700">' + u.name + '</div>'
+        + '<div class="text-xs text-slate-400">本周发帖 ' + u.posts + ' 篇</div></div>'
+        + '<button class="text-xs text-primary-600 font-medium hover:text-primary-700">+关注</button>';
+      userList.appendChild(div);
+    });
+
+    // Sort buttons
+    document.querySelectorAll('.sort-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.sort-btn').forEach(function (b) {
+          b.classList.remove('active-sort', 'bg-primary-50', 'text-primary-600');
+          b.classList.add('text-slate-500');
+        });
+        this.classList.add('active-sort', 'bg-primary-50', 'text-primary-600');
+        this.classList.remove('text-slate-500');
+        // Simulate reload
+        const shuffled = generatePosts(8, randomInt(0, 50));
+        loadedCount = 8;
+        renderPosts(shuffled, false);
+      });
+    });
+
+    // Infinite scroll
+    const indicator = document.getElementById('load-more-indicator');
+    const observer = new IntersectionObserver(function (entries) {
+      if (entries[0].isIntersecting) loadMorePosts();
+    }, { rootMargin: '200px' });
+    if (indicator) observer.observe(indicator);
+
+    // Nav pills
+    document.querySelectorAll('.nav-pill').forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        document.querySelectorAll('.nav-pill').forEach(function (p) {
+          p.classList.remove('active-pill', 'bg-primary-50', 'text-primary-600', 'border-primary-200');
+          p.classList.add('text-slate-500');
+        });
+        this.classList.add('active-pill', 'bg-primary-50', 'text-primary-600', 'border-primary-200');
+        this.classList.remove('text-slate-500');
+        renderPosts(generatePosts(8, randomInt(0, 30)), false);
+      });
+    });
+  }
+
+  // ============================
+  // DETAIL PAGE
+  // ============================
+
+  function initDetailPage() {
+    // Action buttons (like, collect, share)
+    document.querySelectorAll('.action-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const action = this.getAttribute('data-action');
+        const countEl = this.querySelector('.action-count');
+        const iconEl = this.querySelector('i');
+
+        if (action === 'like') {
+          if (this.classList.contains('liked')) {
+            this.classList.remove('liked', 'bg-primary-50');
+            if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
+          } else {
+            this.classList.add('liked', 'bg-primary-50');
+            if (countEl) countEl.textContent = parseInt(countEl.textContent) + 1;
+            iconEl.classList.add('like-pop');
+            iconEl.addEventListener('animationend', function () { iconEl.classList.remove('like-pop'); }, { once: true });
+          }
+        } else if (action === 'collect') {
+          if (this.classList.contains('collected')) {
+            this.classList.remove('collected', 'bg-accent-50');
+            if (countEl) countEl.textContent = parseInt(countEl.textContent) - 1;
+          } else {
+            this.classList.add('collected', 'bg-accent-50');
+            if (countEl) countEl.textContent = parseInt(countEl.textContent) + 1;
+            iconEl.classList.add('like-pop');
+            showToast('收藏成功！', 'success');
+            iconEl.addEventListener('animationend', function () { iconEl.classList.remove('like-pop'); }, { once: true });
+          }
+        } else if (action === 'share') {
+          showToast('链接已复制到剪贴板！', 'info');
+        }
+      });
+    });
+
+    // Comments
+    const comments = [
+      { author: '李若涵', img: 11, time: '2 小时前', content: '写得很详细！收藏了，周末试试看。', likes: 24, floor: 1, replies: [
+        { author: '王晓明', img: 3, time: '1 小时前', content: '同求，最近也在搞这个', likes: 8 },
+      ]},
+      { author: '陈欣然', img: 9, time: '3 小时前', content: '教务系统那边有没有做验证码识别？感觉会被反爬', likes: 18, floor: 2, replies: [] },
+      { author: '赵思远', img: 7, time: '5 小时前', content: '大佬！这个 GitHub 仓库地址能分享一下吗？', likes: 12, floor: 3, replies: [] },
+    ];
+
+    const list = document.getElementById('comment-list');
+    list.innerHTML = '';
+    comments.forEach(function (c) {
+      const div = document.createElement('div');
+      div.className = 'flex gap-3';
+      let repliesHtml = '';
+      if (c.replies && c.replies.length > 0) {
+        repliesHtml = '<div class="mt-3 space-y-3 pl-4 border-l-2 border-slate-100">';
+        c.replies.forEach(function (r) {
+          repliesHtml += '<div class="flex gap-2">'
+            + '<img src="https://i.pravatar.cc/28?img=' + r.img + '" class="w-7 h-7 rounded-full flex-shrink-0" alt="avatar" />'
+            + '<div class="flex-1"><div class="text-xs text-slate-500 mb-1"><span class="font-semibold text-slate-700">' + r.author + '</span> · ' + r.time + '</div>'
+            + '<div class="text-sm text-slate-700">' + r.content + '</div></div></div>';
+        });
+        repliesHtml += '</div>';
+      }
+      div.innerHTML = '<img src="https://i.pravatar.cc/36?img=' + c.img + '" class="w-9 h-9 rounded-full flex-shrink-0" alt="avatar" />'
+        + '<div class="flex-1">'
+          + '<div class="flex items-center gap-2 mb-1">'
+            + '<span class="text-sm font-semibold text-slate-800">' + c.author + '</span>'
+            + '<span class="text-xs text-slate-400">· ' + c.time + '</span>'
+            + '<span class="ml-2 text-xs text-slate-300">B' + c.floor + '</span>'
+          + '</div>'
+          + '<div class="text-sm text-slate-700 leading-relaxed mb-2">' + c.content + '</div>'
+          + repliesHtml
+          + '<div class="flex items-center gap-4 mt-2">'
+            + '<button class="comment-like-btn flex items-center gap-1.5 text-xs text-slate-400 hover:text-primary-600 transition-colors"><i data-lucide="thumbs-up" class="w-3 h-3"></i><span>' + c.likes + '</span></button>'
+            + '<button class="text-xs text-slate-400 hover:text-primary-600 transition-colors">回复</button>'
+          + '</div>'
+        + '</div>';
+      list.appendChild(div);
+    });
+
+    // Related posts
+    const related = document.getElementById('related-posts');
+    if (related) {
+      related.innerHTML = '';
+      const relatedTitles = ['Python 基础教程合集', 'JS 异步编程详解', '如何写好技术博客'];
+      relatedTitles.forEach(function (t) {
+        const div = document.createElement('div');
+        div.className = 'text-xs text-slate-600 hover:text-primary-600 cursor-pointer transition-colors leading-relaxed py-1.5 border-b border-slate-50';
+        div.textContent = t;
+        related.appendChild(div);
+      });
+    }
+
+    // Back button
+    document.getElementById('btn-back-detail').addEventListener('click', function () { showSubPage('home'); });
+
+    // Comment like buttons
+    document.querySelectorAll('.comment-like-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const countEl = this.querySelector('span');
+        if (this.classList.contains('liked')) {
+          this.classList.remove('liked', 'text-primary-600');
+          this.classList.add('text-slate-400');
+          countEl.textContent = parseInt(countEl.textContent) - 1;
+        } else {
+          this.classList.add('liked', 'text-primary-600');
+          this.classList.remove('text-slate-400');
+          countEl.textContent = parseInt(countEl.textContent) + 1;
+        }
+      });
+    });
+
+    lucide.createIcons();
+  }
+
+  // ============================
+  // PUBLISH PAGE
+  // ============================
+
+  async function initPublishPage() {
+    // Category selector
+    document.querySelectorAll('.cat-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.cat-btn').forEach(function (b) {
+          b.classList.remove('active-cat', 'bg-primary-50', 'text-primary-600', 'border-primary-200', 'border');
+          b.classList.add('bg-slate-100', 'text-slate-500');
+        });
+        this.classList.add('active-cat', 'bg-primary-50', 'text-primary-600', 'border-primary-200', 'border');
+        this.classList.remove('bg-slate-100', 'text-slate-500');
+      });
+    });
+
+    // Submit
+    document.getElementById('btn-submit-post').addEventListener('click', async function () {
+      const title = document.getElementById('post-title').value;
+      const content = document.getElementById('editor-content').innerHTML;
+      const category = document.querySelector('.cat-btn.active-cat').textContent;
+
+      if (!title || !content) {
+        showToast('请填写标题和内容', 'error');
+        return;
+      }
+
+      try {
+        const userId = localStorage.getItem('userId');
+        const result = await discussionAPI.create({
+          title,
+          content,
+          category,
+          userId: parseInt(userId)
+        });
+
+        if (result.code === 200) {
+          showToast('🎉 帖子发布成功！', 'success');
+          setTimeout(function () { showSubPage('home'); }, 800);
+        } else {
+          showToast(result.message, 'error');
+        }
+      } catch (error) {
+        showToast('发布失败', 'error');
+      }
+    });
+
+    // Back button
+    document.getElementById('btn-back-publish').addEventListener('click', function () { showSubPage('home'); });
+
+    // Image upload
+    const uploadArea = document.getElementById('image-upload-area');
+    const imgInput = document.getElementById('img-upload-input');
+    uploadArea.addEventListener('click', function () { imgInput.click(); });
+    imgInput.addEventListener('change', function () {
+      const uploadedDiv = document.getElementById('uploaded-images');
+      Array.from(this.files).forEach(function (file, i) {
+        const url = URL.createObjectURL(file);
+        const wrapper = document.createElement('div');
+        wrapper.className = 'relative group';
+        const img = document.createElement('img');
+        img.src = url;
+        img.className = 'w-24 h-24 object-cover rounded-xl border border-slate-200';
+        const del = document.createElement('button');
+        del.className = 'absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full text-white text-xs hidden group-hover:flex items-center justify-center';
+        del.textContent = '×';
+        del.addEventListener('click', function () { wrapper.remove(); });
+        wrapper.appendChild(img);
+        wrapper.appendChild(del);
+        uploadedDiv.appendChild(wrapper);
+      });
+    });
+
+    // Toolbar image button
+    document.getElementById('toolbar-img-btn').addEventListener('click', function () { imgInput.click(); });
+  }
+
+  // ============================
+  // PROFILE PAGE
+  // ============================
+
+  function initProfilePage() {
+    const tabs = document.querySelectorAll('.profile-tab');
+    const content = document.getElementById('profile-tab-content');
+
+    function renderProfileTab(tab) {
+      content.innerHTML = '';
+      if (tab === 'my-posts') {
+        const posts = generatePosts(5, 0);
+        posts.forEach(function (p) {
+          const div = document.createElement('div');
+          div.className = 'flex items-start gap-3 py-4 border-b border-slate-50 last:border-0 cursor-pointer hover:bg-slate-50 rounded-xl px-3 -mx-3 transition-all';
+          const catClass = categoryBadge[p.category] || 'badge-tech';
+          div.innerHTML = '<span class="' + catClass + ' text-xs font-semibold px-2 py-0.5 rounded-md flex-shrink-0 mt-0.5">' + p.category + '</span>'
+            + '<div class="flex-1 min-w-0">'
+              + '<div class="text-sm font-semibold text-slate-800 mb-1 truncate">' + p.title + '</div>'
+              + '<div class="flex items-center gap-3 text-xs text-slate-400">'
+                + '<span>' + p.time + '</span>'
+                + '<span class="flex items-center gap-1"><i data-lucide="thumbs-up" class="w-3 h-3"></i>' + p.likes + '</span>'
+                + '<span class="flex items-center gap-1"><i data-lucide="message-circle" class="w-3 h-3"></i>' + p.replies + '</span>'
+              + '</div>'
+            + '</div>'
+            + '<button class="p-1.5 rounded-lg hover:bg-red-50 text-slate-300 hover:text-red-400 transition-all flex-shrink-0"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>';
+          content.appendChild(div);
+        });
+      } else if (tab === 'my-replies') {
+        const replies = ['回复了 《Python爬虫》：感谢分享，收藏了！', '回复了 《期末备考》：这个方法真的有效吗？', '回复了 《宿舍神器》：楼主推荐的台灯哪里买的？'];
+        replies.forEach(function (r, i) {
+          const div = document.createElement('div');
+          div.className = 'py-4 border-b border-slate-50 last:border-0';
+          div.innerHTML = '<div class="text-xs text-slate-400 mb-1">' + (i * 2 + 1) + ' 小时前</div>'
+            + '<div class="text-sm text-slate-700 leading-relaxed">' + r + '</div>';
+          content.appendChild(div);
+        });
+      } else if (tab === 'my-favorites') {
+        const favs = generatePosts(4, 10);
+        favs.forEach(function (p) {
+          const div = document.createElement('div');
+          div.className = 'flex items-center gap-3 py-3 border-b border-slate-50 last:border-0 cursor-pointer hover:bg-slate-50 rounded-xl px-3 -mx-3 transition-all';
+          div.innerHTML = '<i data-lucide="bookmark" class="w-4 h-4 text-accent-500 flex-shrink-0"></i>'
+            + '<div class="flex-1 min-w-0 text-sm font-medium text-slate-800 truncate">' + p.title + '</div>'
+            + '<span class="text-xs text-slate-400">' + p.time + '</span>';
+          content.appendChild(div);
+        });
+      }
+      lucide.createIcons();
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) {
+          t.classList.remove('tab-active');
+          t.classList.add('text-slate-500');
+          t.classList.remove('text-primary-600');
+        });
+        this.classList.add('tab-active');
+        this.classList.remove('text-slate-500');
+        renderProfileTab(this.getAttribute('data-tab'));
+      });
+    });
+
+    renderProfileTab('my-posts');
+  }
+
+  // ============================
+  // AI CHAT PAGE
+  // ============================
+
+  const aiMessages = [
+    { role: 'ai', text: '👋 你好！我是 Campus AI 助手，可以帮你解答学习问题、写代码、查资料，甚至生成图片。今天有什么我可以帮到你的？' }
+  ];
+
+  let aiTypingTimer = null;
+
+  function renderChatMessages() {
+    const container = document.getElementById('chat-messages');
+    if (!container) return;
+    container.innerHTML = '';
+    aiMessages.forEach(function (msg, i) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'flex gap-3 items-end ' + (msg.role === 'user' ? 'flex-row-reverse' : '');
+      const avatar = document.createElement('div');
+      avatar.className = 'w-8 h-8 rounded-full flex-shrink-0 overflow-hidden flex items-center justify-center';
+      if (msg.role === 'user') {
+        avatar.innerHTML = '<img src="https://i.pravatar.cc/32?img=10" class="w-full h-full object-cover" alt="me" />';
+      } else {
+        avatar.className += ' bg-gradient-to-br from-primary-500 to-accent-500';
+        avatar.innerHTML = '<i data-lucide="sparkles" style="width:16px;height:16px;color:white;"></i>';
+      }
+      const bubble = document.createElement('div');
+      bubble.className = 'max-w-lg px-4 py-3 text-sm leading-relaxed ' + (msg.role === 'user' ? 'bubble-user' : 'bubble-ai');
+      if (msg.isTyping) {
+        bubble.className += ' typing-cursor';
+        bubble.textContent = msg.displayText || '';
+      } else {
+        bubble.innerHTML = msg.text;
+      }
+      bubble.setAttribute('data-msg-id', i);
+      wrapper.appendChild(avatar);
+      wrapper.appendChild(bubble);
+      container.appendChild(wrapper);
+    });
+    lucide.createIcons();
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function simulateAITyping(responseText) {
+    aiMessages.push({ role: 'ai', text: '', isTyping: true, displayText: '' });
+    const idx = aiMessages.length - 1;
+    let charIndex = 0;
+    clearInterval(aiTypingTimer);
+    aiTypingTimer = setInterval(function () {
+      if (charIndex < responseText.length) {
+        aiMessages[idx].displayText = responseText.substring(0, charIndex + 1);
+        charIndex++;
+        const container = document.getElementById('chat-messages');
+        if (!container) return;
+        const bubbles = container.querySelectorAll('[data-msg-id="' + idx + '"]');
+        bubbles.forEach(function (b) { b.textContent = aiMessages[idx].displayText; });
+        container.scrollTop = container.scrollHeight;
+      } else {
+        clearInterval(aiTypingTimer);
+        aiMessages[idx].isTyping = false;
+        aiMessages[idx].text = responseText;
+        renderChatMessages();
+      }
+    }, 25);
+  }
+
+  const aiResponses = [
+    '好的！关于这个问题，我来给你详细解答：<br><br><strong>核心要点：</strong><br>1. 首先需要了解基本原理<br>2. 参考官方文档是最准确的<br>3. 动手实践是最好的学习方式<br><br>有什么具体的地方需要进一步解释吗？',
+    '这是一个很有趣的问题！让我来帮你分析一下…<br><br>从技术角度来看，你可以考虑以下几个方向：<br>• 方案一：使用现有的开源框架<br>• 方案二：自己从头实现核心逻辑<br>• 方案三：结合两者取长补短',
+    '当然可以帮你！以下是一个示例代码：<br><br><code style="background:#f1f5f9;padding:8px 12px;border-radius:8px;display:block;margin-top:8px;font-size:12px;">def hello_world():<br>&nbsp;&nbsp;&nbsp;&nbsp;print("Hello, Campus!")</code><br><br>你可以根据自己的需求修改这个基础结构。',
+  ];
+
+  async function initAIPage() {
+    // Check if user is logged in
+    const loginStatus = await authAPI.checkLogin();
+    if (!loginStatus.logged) {
+      showToast('请先登录', 'error');
+      showPage('auth');
+      return;
+    }
+
+    renderChatMessages();
+
+    const input = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('btn-send-chat');
+
+    async function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      // Add user message
+      aiMessages.push({ role: 'user', text: text });
+      input.value = '';
+      input.style.height = 'auto';
+      // Hide quick prompts
+      const qp = document.getElementById('quick-prompts');
+      if (qp) qp.classList.add('hidden');
+      renderChatMessages();
+
+      try {
+        // Send message to server
+        const userId = localStorage.getItem('userId');
+        const result = await fetch('/api/chat/message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-User-Id': userId
+          },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await result.json();
+
+        if (data.code === 200) {
+          // Add AI response
+          simulateAITyping(data.data.response);
+        } else {
+          simulateAITyping('抱歉，我现在无法回答，请稍后再试。');
+        }
+      } catch (error) {
+        console.error('Chat error:', error);
+        // Simulate AI response as fallback
+        setTimeout(function () {
+          const response = aiResponses[randomInt(0, aiResponses.length - 1)];
+          simulateAITyping(response);
+        }, 600);
+      }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    input.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // Auto-resize textarea
+    input.addEventListener('input', function () {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 128) + 'px';
+    });
+
+    // Quick prompts
+    document.querySelectorAll('.quick-prompt-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        input.value = this.textContent.substring(2);
+        sendMessage();
+      });
+    });
+  }
+
+  // ============================
+  // NOTIFICATION PAGE
+  // ============================
+
+  function initNotificationPage() {
+    const notifications = [
+      { type: 'like', icon: 'thumbs-up', color: 'text-primary-500', bg: 'bg-primary-100', user: '李若涵', action: '赞了你的帖子', target: '《Python爬虫怎么写？》', time: '2 分钟前', unread: true, img: 11 },
+      { type: 'reply', icon: 'message-circle', color: 'text-emerald-500', bg: 'bg-emerald-100', user: '陈欣然', action: '回复了你的评论', target: '"有没有做验证码识别？"', time: '15 分钟前', unread: true, img: 9 },
+      { type: 'system', icon: 'bell', color: 'text-accent-500', bg: 'bg-accent-100', user: '系统通知', action: '你的帖子被收录进', target: '「本周精选」', time: '1 小时前', unread: true, img: 0 },
+      { type: 'like', icon: 'thumbs-up', color: 'text-primary-500', bg: 'bg-primary-100', user: '赵思远', action: '赞了你的回复', target: '"这个方法真有用"', time: '3 小时前', unread: false, img: 7 },
+      { type: 'reply', icon: 'message-circle', color: 'text-emerald-500', bg: 'bg-emerald-100', user: '王晓明', action: '回复了你的帖子', target: '《高效备战期末》', time: '昨天', unread: false, img: 3 },
+      { type: 'system', icon: 'shield', color: 'text-slate-500', bg: 'bg-slate-100', user: '系统通知', action: '你的账号安全等级提升至', target: '高级认证', time: '2 天前', unread: false, img: 0 },
+    ];
+
+    const list = document.getElementById('notification-list');
+    list.innerHTML = '';
+    notifications.forEach(function (n) {
+      const div = document.createElement('div');
+      div.className = 'bg-white rounded-2xl card-shadow border ' + (n.unread ? 'border-primary-100' : 'border-slate-100') + ' p-4 flex items-start gap-4 cursor-pointer hover:border-primary-200 transition-all';
+      const avatarOrIcon = n.img > 0
+        ? '<img src="https://i.pravatar.cc/40?img=' + n.img + '" class="w-10 h-10 rounded-full flex-shrink-0" alt="user" />'
+        : '<div class="w-10 h-10 rounded-full ' + n.bg + ' flex items-center justify-center flex-shrink-0"><i data-lucide="' + n.icon + '" class="w-5 h-5 ' + n.color + '"></i></div>';
+      div.innerHTML = avatarOrIcon
+        + '<div class="flex-1">'
+          + '<div class="flex items-start justify-between gap-2">'
+            + '<div class="text-sm text-slate-700 leading-relaxed"><span class="font-semibold text-slate-900">' + n.user + '</span> ' + n.action + ' <span class="text-primary-600 font-medium">' + n.target + '</span></div>'
+            + (n.unread ? '<div class="w-2 h-2 rounded-full bg-primary-500 flex-shrink-0 mt-1.5"></div>' : '')
+          + '</div>'
+          + '<div class="text-xs text-slate-400 mt-1">' + n.time + '</div>'
+        + '</div>';
+      list.appendChild(div);
+    });
+
+    // Filter
+    document.querySelectorAll('.notif-filter').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.notif-filter').forEach(function (b) {
+          b.classList.remove('active-filter', 'bg-primary-50', 'text-primary-600', 'border-primary-200');
+          b.classList.add('bg-white', 'text-slate-500', 'border-slate-200');
+        });
+        this.classList.add('active-filter', 'bg-primary-50', 'text-primary-600', 'border-primary-200');
+        this.classList.remove('bg-white', 'text-slate-500');
+      });
+    });
+
+    lucide.createIcons();
+  }
+
+  // ============================
+  // ADMIN PAGE
+  // ============================
+
+  function renderAdminDashboard() {
+    const content = document.getElementById('admin-content');
+    content.innerHTML = '<h2 class="text-2xl font-bold text-slate-900 mb-6">数据看板</h2>'
+      // Stats cards
+      + '<div class="grid grid-cols-2 xl:grid-cols-4 gap-5 mb-8" id="admin-stat-cards"></div>'
+      // Charts row
+      + '<div class="grid grid-cols-1 xl:grid-cols-3 gap-5 mb-8">'
+        + '<div class="xl:col-span-2 bg-white rounded-2xl p-6 card-shadow border border-slate-100"><div class="flex items-center justify-between mb-4"><h3 class="font-bold text-slate-800 text-sm">用户活跃度（近7天）</h3></div><canvas id="admin-chart-activity" height="80"></canvas></div>'
+        + '<div class="bg-white rounded-2xl p-6 card-shadow border border-slate-100"><div class="font-bold text-slate-800 text-sm mb-4">帖子分类分布</div><canvas id="admin-chart-category" height="160"></canvas></div>'
+      + '</div>';
+
+    // Stat cards data
+    const stats = [
+      { label: '总用户数', value: '12,480', change: '+3.2%', icon: 'users', color: 'text-primary-500', bg: 'bg-primary-50' },
+      { label: '今日活跃', value: '1,238', change: '+8.1%', icon: 'zap', color: 'text-emerald-500', bg: 'bg-emerald-50' },
+      { label: '帖子总数', value: '56,920', change: '+1.5%', icon: 'file-text', color: 'text-accent-500', bg: 'bg-accent-50' },
+      { label: '待处理举报', value: '7', change: '-2', icon: 'flag', color: 'text-red-500', bg: 'bg-red-50' },
+    ];
+
+    const cardsContainer = document.getElementById('admin-stat-cards');
+    stats.forEach(function (s) {
+      const card = document.createElement('div');
+      card.className = 'bg-white rounded-2xl p-6 card-shadow border border-slate-100';
+      card.innerHTML = '<div class="flex items-center justify-between mb-4">'
+        + '<div class="w-10 h-10 rounded-xl ' + s.bg + ' flex items-center justify-center"><i data-lucide="' + s.icon + '" class="w-5 h-5 ' + s.color + '"></i></div>'
+        + '<span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-lg">' + s.change + '</span>'
+      + '</div>'
+      + '<div class="text-2xl font-bold text-slate-900 mb-1">' + s.value + '</div>'
+      + '<div class="text-sm text-slate-400">' + s.label + '</div>';
+      cardsContainer.appendChild(card);
+    });
+
+    lucide.createIcons();
+
+    // Activity chart
+    const ctx1 = document.getElementById('admin-chart-activity');
+    if (ctx1) {
+      new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: ['周一','周二','周三','周四','周五','周六','周日'],
+          datasets: [{
+            label: '活跃用户',
+            data: [820, 932, 901, 1180, 1352, 996, 1238],
+            borderColor: '#6272f0',
+            backgroundColor: 'rgba(98,114,240,0.08)',
+            tension: 0.4,
+            fill: true,
+            pointBackgroundColor: '#6272f0',
+            pointRadius: 4,
+          }]
+        },
+        options: { maintainAspectRatio: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: false, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } }
+      });
+    }
+
+    // Category pie chart
+    const ctx2 = document.getElementById('admin-chart-category');
+    if (ctx2) {
+      new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: ['技术','生活','学习','游戏','提问','新闻'],
+          datasets: [{ data: [32, 24, 18, 12, 9, 5], backgroundColor: ['#6272f0','#fbbf24','#10b981','#f43f5e','#8b5cf6','#3b82f6'], borderWidth: 0, hoverOffset: 4 }]
+        },
+        options: { maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 }, padding: 10 } } }, cutout: '65%' }
+      });
+    }
+  }
+
+  function renderAdminUsers() {
+    const content = document.getElementById('admin-content');
+    const users = [];
+    const statuses = ['正常', '正常', '正常', '封禁', '正常'];
+    const roles = ['学生', '学生', '版主', '学生', '管理员'];
+    for (let i = 0; i < 10; i++) {
+      users.push({
+        id: 2024100 + i,
+        name: nicknames[i % nicknames.length],
+        college: colleges[i % colleges.length],
+        status: statuses[i % statuses.length],
+        role: roles[i % roles.length],
+        posts: randomInt(5, 200),
+        joinDate: '2024-0' + (i % 9 + 1) + '-15',
+        img: avatarIds[i % avatarIds.length],
+      });
+    }
+
+    content.innerHTML = '<div class="flex items-center justify-between mb-6">'
+      + '<h2 class="text-2xl font-bold text-slate-900">用户管理</h2>'
+      + '<div class="flex items-center gap-3">'
+        + '<div class="relative"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i><input type="text" placeholder="搜索用户…" class="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-primary-400 focus:ring-2 focus:ring-primary-100" /></div>'
+        + '<button class="flex items-center gap-2 px-4 py-2 grad-primary text-white text-sm font-semibold rounded-xl btn-hover">导出数据</button>'
+      + '</div>'
+    + '</div>'
+    + '<div class="bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden">'
+      + '<table class="w-full text-sm">'
+        + '<thead><tr class="border-b border-slate-100 bg-slate-50">'
+          + '<th class="text-left px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase tracking-wide">用户</th>'
+          + '<th class="text-left px-4 py-3.5 font-semibold text-slate-500 text-xs uppercase tracking-wide hidden lg:table-cell">学院</th>'
+          + '<th class="text-left px-4 py-3.5 font-semibold text-slate-500 text-xs uppercase tracking-wide">角色</th>'
+          + '<th class="text-left px-4 py-3.5 font-semibold text-slate-500 text-xs uppercase tracking-wide">状态</th>'
+          + '<th class="text-left px-4 py-3.5 font-semibold text-slate-500 text-xs uppercase tracking-wide hidden xl:table-cell">帖子数</th>'
+          + '<th class="text-left px-4 py-3.5 font-semibold text-slate-500 text-xs uppercase tracking-wide hidden xl:table-cell">注册时间</th>'
+          + '<th class="text-right px-5 py-3.5 font-semibold text-slate-500 text-xs uppercase tracking-wide">操作</th>'
+        + '</tr></thead>'
+        + '<tbody id="admin-user-tbody"></tbody>'
+      + '</table>'
+    + '</div>';
+
+    const tbody = document.getElementById('admin-user-tbody');
+    users.forEach(function (u) {
+      const tr = document.createElement('tr');
+      tr.className = 'table-row border-b border-slate-50 last:border-0';
+      const isBanned = u.status === '封禁';
+      tr.innerHTML = '<td class="px-5 py-3.5"><div class="flex items-center gap-3"><img src="https://i.pravatar.cc/32?img=' + u.img + '" class="w-8 h-8 rounded-full" alt="user" /><div><div class="font-medium text-slate-800">' + u.name + '</div><div class="text-xs text-slate-400">#' + u.id + '</div></div></div></td>'
+        + '<td class="px-4 py-3.5 text-slate-600 hidden lg:table-cell">' + u.college + '</td>'
+        + '<td class="px-4 py-3.5"><span class="px-2.5 py-1 rounded-lg text-xs font-semibold ' + (u.role === '管理员' ? 'bg-primary-50 text-primary-600' : u.role === '版主' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-600') + '">' + u.role + '</span></td>'
+        + '<td class="px-4 py-3.5"><span class="flex items-center gap-1.5 text-xs font-medium ' + (isBanned ? 'text-red-500' : 'text-emerald-600') + '"><div class="w-1.5 h-1.5 rounded-full ' + (isBanned ? 'bg-red-500' : 'bg-emerald-500') + '"></div>' + u.status + '</span></td>'
+        + '<td class="px-4 py-3.5 text-slate-600 hidden xl:table-cell">' + u.posts + '</td>'
+        + '<td class="px-4 py-3.5 text-slate-400 text-xs hidden xl:table-cell">' + u.joinDate + '</td>'
+        + '<td class="px-5 py-3.5 text-right"><div class="flex items-center gap-1 justify-end">'
+          + '<button class="px-3 py-1.5 text-xs font-medium border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-all">编辑</button>'
+          + '<button class="px-3 py-1.5 text-xs font-medium border ' + (isBanned ? 'border-emerald-200 text-emerald-600 hover:bg-emerald-50' : 'border-red-200 text-red-500 hover:bg-red-50') + ' rounded-lg transition-all">' + (isBanned ? '解封' : '封禁') + '</button>'
+        + '</div></td>';
+      tbody.appendChild(tr);
+    });
+
+    lucide.createIcons();
+  }
+
+  function initAdminPage() {
+    renderAdminDashboard();
+
+    document.querySelectorAll('.admin-nav-item').forEach(function (item) {
+      item.addEventListener('click', function () {
+        document.querySelectorAll('.admin-nav-item').forEach(function (i) { i.classList.remove('active'); });
+        this.classList.add('active');
+        const section = this.getAttribute('data-admin-section');
+        if (section === 'dashboard') renderAdminDashboard();
+        else if (section === 'users') renderAdminUsers();
+        else {
+          const content = document.getElementById('admin-content');
+          content.innerHTML = '<div class="flex flex-col items-center justify-center h-64 text-slate-400 gap-3">'
+            + '<i data-lucide="construction" class="w-10 h-10"></i>'
+            + '<p class="text-sm">该功能开发中…</p>'
+            + '</div>';
+          lucide.createIcons();
+        }
+      });
+    });
+  }
+
+  // ============================
+  // COURSE PAGE
+  // ============================
+
+  function initCoursePage() {
+    // Weekly schedule
+    const days = ['周一','周二','周三','周四','周五'];
+    const courseColors = ['bg-primary-100 text-primary-700', 'bg-emerald-100 text-emerald-700', 'bg-accent-100 text-accent-700', 'bg-violet-100 text-violet-700', 'bg-yellow-100 text-yellow-700'];
+    const weekSchedule = document.getElementById('weekly-schedule');
+    if (weekSchedule) {
+      weekSchedule.innerHTML = '';
+      days.forEach(function (day, idx) {
+        const col = document.createElement('div');
+        col.className = 'space-y-2';
+        col.innerHTML = '<div class="text-xs font-semibold text-slate-500 text-center mb-2">' + day + '</div>';
+        const slots = idx === 0 ? ['高数','','线代','','英语'] : idx === 1 ? ['','数据结构','','大物',''] : idx === 2 ? ['英语','','','算法','C++'] : idx === 3 ? ['线代','','大物','',''] : ['','算法','数据结构','',''];
+        slots.forEach(function (s, si) {
+          const slot = document.createElement('div');
+          if (s) {
+            slot.className = 'text-xs font-medium rounded-xl px-2 py-2.5 text-center cursor-pointer ' + courseColors[idx];
+            slot.textContent = s;
+          } else {
+            slot.className = 'h-9 rounded-xl bg-slate-50 border border-slate-100';
+          }
+          col.appendChild(slot);
+        });
+        weekSchedule.appendChild(col);
+      });
+    }
+
+    // Course cards
+    const courses = [
+      { name: '高等数学 A（上）', teacher: '王建国', credit: 4, time: '周一 1-2节 / 周三 5-6节', location: '教学楼 A301', students: 128, img: 'photo-1635070041078-e363dbe005cb', progress: 68, color: 'from-primary-500 to-primary-600', tags: ['必修','公共课'] },
+      { name: '数据结构与算法', teacher: '李梅华', credit: 3, time: '周二 3-4节 / 周五 3-4节', location: '计算机楼 B201', students: 86, img: 'photo-1516321318423-f06f85e504b3', progress: 55, color: 'from-emerald-500 to-emerald-600', tags: ['必修','专业课'] },
+      { name: '大学英语 CET-4', teacher: 'Susan Li', credit: 2, time: '周一 5-6节 / 周四 5-6节', location: '外语楼 C105', students: 64, img: 'photo-1456513080510-7bf3a84b82f8', progress: 72, color: 'from-accent-500 to-accent-600', tags: ['必修','英语'] },
+      { name: '线性代数', teacher: '张雅琴', credit: 3, time: '周四 1-2节 / 周一 3-4节', location: '教学楼 A201', students: 110, img: 'photo-1509228468518-180dd4864904', progress: 40, color: 'from-violet-500 to-violet-600', tags: ['必修','公共课'] },
+      { name: 'C++ 程序设计', teacher: '赵志强', credit: 3.5, time: '周三 3-4节 / 周五 5-6节', location: '计算机楼 B105', students: 72, img: 'photo-1555949963-aa79dcee981c', progress: 83, color: 'from-pink-500 to-rose-500', tags: ['必修','专业课'] },
+      { name: '大学物理（上）', teacher: '孙明远', credit: 3, time: '周二 5-6节 / 周四 3-4节', location: '理学楼 D301', students: 95, img: 'photo-1636466497217-26a8cbeaf0aa', progress: 30, color: 'from-yellow-500 to-orange-500', tags: ['必修','公共课'] },
+    ];
+
+    const courseList = document.getElementById('course-list');
+    if (courseList) {
+      courseList.innerHTML = '';
+      courses.forEach(function (c) {
+        const div = document.createElement('div');
+        div.className = 'course-card bg-white rounded-2xl card-shadow border border-slate-100 overflow-hidden cursor-pointer';
+        div.innerHTML = '<div class="h-36 bg-gradient-to-br ' + c.color + ' relative overflow-hidden">'
+          + '<img src="https://images.unsplash.com/' + c.img + '?w=400&q=70" class="w-full h-full object-cover opacity-30" alt="course" />'
+          + '<div class="absolute inset-0 p-4 flex flex-col justify-between">'
+            + '<div class="flex gap-2">' + c.tags.map(function (t) { return '<span class="px-2 py-0.5 bg-white/20 text-white text-xs font-semibold rounded-lg backdrop-blur-sm">' + t + '</span>'; }).join('') + '</div>'
+            + '<div class="text-white font-bold text-base leading-snug">' + c.name + '</div>'
+          + '</div>'
+        + '</div>'
+        + '<div class="p-5">'
+          + '<div class="flex items-center gap-2 mb-3">'
+            + '<img src="https://i.pravatar.cc/24?img=' + randomInt(1, 20) + '" class="w-6 h-6 rounded-full" alt="teacher" />'
+            + '<span class="text-sm text-slate-600">' + c.teacher + '</span>'
+            + '<span class="ml-auto text-xs text-slate-400">' + c.credit + ' 学分</span>'
+          + '</div>'
+          + '<div class="flex items-center gap-1.5 text-xs text-slate-400 mb-1"><i data-lucide="clock" class="w-3 h-3"></i>' + c.time + '</div>'
+          + '<div class="flex items-center gap-1.5 text-xs text-slate-400 mb-4"><i data-lucide="map-pin" class="w-3 h-3"></i>' + c.location + '</div>'
+          + '<div class="mb-1 flex items-center justify-between"><span class="text-xs text-slate-500">课程进度</span><span class="text-xs font-semibold text-slate-700">' + c.progress + '%</span></div>'
+          + '<div class="h-1.5 bg-slate-100 rounded-full overflow-hidden"><div class="h-full rounded-full bg-gradient-to-r ' + c.color + ' transition-all" style="width:' + c.progress + '%"></div></div>'
+        + '</div>';
+        courseList.appendChild(div);
+      });
+    }
+    lucide.createIcons();
+  }
+
+  // ============================
+  // INIT ALL PAGES
+  // ============================
+
+  let pagesInitialized = false;
+
+  function initAllPages() {
+    if (pagesInitialized) return;
+    pagesInitialized = true;
+    initHomePage();
+    initDetailPage();
+    initPublishPage();
+    initProfilePage();
+    initAIPage();
+    initNotificationPage();
+    initAdminPage();
+    initCoursePage();
+    lucide.createIcons();
+  }
+
+  // ============================
+  // INITIAL CALL
+  // ============================
+
+  lucide.createIcons();
+});
+</script>
+</body>
+</html>

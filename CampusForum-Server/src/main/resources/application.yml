@@ -1,0 +1,87 @@
+# 服务器配置
+server:
+  port: ${server.port} # 服务器端口号
+  # 大模型对话中文乱码UTF8编码
+  servlet:
+    encoding:
+      charset: ${server.servlet.encoding.charset}    # 请求和响应的字符编码
+      enabled: ${server.servlet.encoding.enabled}     # 启用字符编码过滤器
+      force: ${server.servlet.encoding.force}       # 强制使用指定编码
+# Spring框架配置
+spring:
+  servlet:
+    multipart:
+      max-request-size: ${spring.servlet.multipart.max-request-size}  # 最大请求大小
+      max-file-size: ${spring.servlet.multipart.max-file-size}
+  application:
+    name: ${spring.application.name}  # 应用程序名称
+  jackson:
+    date-format: ${spring.jackson.date-format}  #日期格式
+    time-zone: ${spring.jackson.time-zone}  #时区
+    serialization:
+      write-dates-as-timestamps: ${spring.jackson.serialization.write-dates-as-timestamps:false}  # 不使用时间戳格式
+  # 数据源配置
+  datasource:
+    url: ${spring.datasource.url}  # 数据库连接URL
+    username: ${spring.datasource.username}                           # 数据库用户名
+    password: ${spring.datasource.password}                    # 数据库密码
+    driver-class-name: ${spring.datasource.driver-class-name}  # MySQL驱动类
+  # Redis配置
+  data:
+    redis:
+      host: ${spring.data.redis.host}   # Redis服务器地址，默认为localhost
+      port: ${spring.data.redis.port}        # Redis服务器端口，默认为6379
+      password: ${spring.data.redis.password}        # Redis服务器密码，没有则留空
+      database: ${spring.data.redis.database}      # Redis数据库索引，0-15
+      timeout: ${spring.data.redis.timeout}    # 连接超时时间（毫秒）
+      lettuce:          # Lettuce连接池配置
+          pool:
+            max-active: ${spring.data.redis.lettuce.pool.max-active}   # 连接池最大连接数
+            max-idle: ${spring.data.redis.lettuce.pool.max-idle}     # 连接池最大空闲连接数
+            min-idle: ${spring.data.redis.lettuce.pool.min-idle}     # 连接池最小空闲连接数
+  # Spring AI配置（用于大模型集成）
+  ai:
+    # 阿里云DashScope百炼平台配置
+    dashscope:
+      api-key: ${spring.ai.dashscope.api-key}  # API密钥
+    # AI会话配置
+    chat:
+      # 对话记忆配置
+      memory:
+        repository:
+          jdbc:
+            mysql:
+              jdbc-url: ${spring.ai.chat.memory.jdbc.mysql.jdbc-url}  # 记忆存储数据库
+              username: ${spring.ai.chat.memory.jdbc.mysql.username}
+              password: ${spring.ai.chat.memory.jdbc.mysql.password}
+              driver-class-name: ${spring.ai.chat.memory.jdbc.mysql.driver-class-name}
+              enable: ${spring.ai.chat.memory.jdbc.mysql.enable}  # 启用JDBC记忆存储
+        redis:
+          database: ${spring.ai.chat.memory.redis.database}  # Redis数据库索引，0-15
+          host: ${spring.ai.chat.memory.redis.host}  # Redis主机地址
+          port: ${spring.ai.chat.memory.redis.port}       # Redis端口
+          password: ${spring.ai.chat.memory.redis.password}
+          timeout: ${spring.ai.chat.memory.redis.timeout}   # 超时时间（毫秒）
+# MyBatis-Plus 配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true                    # 开启驼峰命名转换
+    log-impl: ${mybatis-plus.configuration.log-impl}  # SQL日志输出实现
+  global-config:
+    db-config:
+      id-type: ${mybatis-plus.global-config.db-type}          # ID生成策略：自动增长
+      logic-delete-field: ${mybatis-plus.global-config.logic-delete-field}    # 逻辑删除字段名
+      logic-delete-value: ${mybatis-plus.global-config.logic-delete-value}          # 逻辑删除值（表示已删除）
+      logic-not-delete-value: ${mybatis-plus.global-config.logic-not-delete-value}      # 逻辑未删除值（表示未删除）
+
+# JWT配置
+jwt:
+  secret-key: ${jwt.secret-key}  # JWT签名密钥
+  expiration-time: ${jwt.expiration-time}  # JWT过期时间（24小时，单位：毫秒）
+  token-name: ${jwt.token-name}  # JWT令牌名称
+#ali-oss:
+ali-oss:
+  endpoint: ${ali-oss.endpoint}
+  bucket-name: ${ali-oss.bucket-name}
+  region: ${ali-oss.region}
+
