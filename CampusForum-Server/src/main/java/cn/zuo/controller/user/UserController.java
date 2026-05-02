@@ -7,6 +7,7 @@ import cn.zuo.dto.userdto.UserUpdateDTO;
 import cn.zuo.entity.User;
 import cn.zuo.result.Result;
 import cn.zuo.service.UserService;
+import cn.zuo.vo.uservo.UserLoginStatsVo;
 import cn.zuo.vo.uservo.UserLoginVO;
 import cn.zuo.vo.uservo.UserRegisterVO;
 import cn.zuo.vo.uservo.UserStatsVo;
@@ -16,8 +17,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -109,9 +108,10 @@ public class UserController {
 
     @GetMapping("/stats")
     @Operation(summary = "获取登录统计", description = "获取在线用户数和今日登录次数")
-    public Result<Map<String, Object>> getLoginStats() {
+    public Result<UserLoginStatsVo> getLoginStats() {
         //TODO
-        Map<String, Object> stats = userService.getLoginStats();
+        UserLoginStatsVo stats = userService.getLoginStats();
         return Result.success(stats);
     }
+
 }

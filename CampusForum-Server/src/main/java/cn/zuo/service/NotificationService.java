@@ -1,5 +1,6 @@
 package cn.zuo.service;
 
+import cn.zuo.dto.notificationdto.AdminNotificationDto;
 import cn.zuo.dto.notificationdto.NotificationPageQueryDto;
 import cn.zuo.entity.Notification;
 import cn.zuo.result.PageResult;
@@ -40,4 +41,21 @@ public interface NotificationService extends IService<Notification> {
      * @return 是否创建成功
      */
     boolean createNotification(Notification notification);
+
+    /**
+     * 删除所有通知
+     */
+    void deleteAllNotifications(Long userId);
+
+    /**
+     * 发送系统通知
+     * @param adminNotificationDto
+     */
+    void sendSystemNotification(AdminNotificationDto adminNotificationDto);
+
+    /**
+     * 发送广播通知
+     * @param adminNotificationDto
+     */
+    void sendBroadcastNotification(AdminNotificationDto adminNotificationDto);
 }

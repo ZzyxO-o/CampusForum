@@ -9,6 +9,8 @@ server:
       force: ${server.servlet.encoding.force}       # 强制使用指定编码
 # Spring框架配置
 spring:
+  profiles:
+    active: dev
   servlet:
     multipart:
       max-request-size: ${spring.servlet.multipart.max-request-size}  # 最大请求大小

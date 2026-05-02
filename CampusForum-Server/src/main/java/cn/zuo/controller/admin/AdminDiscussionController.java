@@ -15,7 +15,6 @@ public class AdminDiscussionController {
     @Resource
     private DiscussionService discussionService;
 
-
     @DeleteMapping("/{discussionId}")
     @Operation(summary = "删除讨论", description = "删除讨论帖（软删除）")
     public Result<String> deleteDiscussion(@Parameter(description = "讨论ID") @PathVariable Long discussionId) {

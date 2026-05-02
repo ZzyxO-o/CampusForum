@@ -189,6 +189,11 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
         discussionMapper.updateById(discussion);
     }
 
+    @Override
+    public Long getTotalDiscussions() {
+        return discussionMapper.selectCount(null);
+    }
+
     /**
      * 根据用户查询讨论
      * @param discussionPageQueryByUserDto

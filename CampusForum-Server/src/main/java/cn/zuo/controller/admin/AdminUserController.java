@@ -81,4 +81,13 @@ public class AdminUserController {
         AdminUserStatsVo userStatsVo = userService.getUserStats();
         return Result.success(userStatsVo);
     }
+
+    @PostMapping("/{userId}/promote")
+    @Operation(summary = "提升用户权限", description = "将普通用户提升为管理员")
+    public Result<String> promoteUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
+        log.info("提升用户权限: {}", userId);
+        userService.updateUserStatus(userId, "admin");
+        return Result.success("用户权限提升成功");
+    }
+
 }

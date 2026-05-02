@@ -13,9 +13,7 @@ import cn.zuo.service.UserService;
 import cn.zuo.utils.JwtUtil;
 import cn.zuo.utils.ThreadLocalUtil;
 import cn.zuo.vo.admin.AdminUserStatsVo;
-import cn.zuo.vo.uservo.UserLoginVO;
-import cn.zuo.vo.uservo.UserRegisterVO;
-import cn.zuo.vo.uservo.UserStatsVo;
+import cn.zuo.vo.uservo.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -29,7 +27,6 @@ import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -123,42 +120,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user == null) {
             throw new UserLoginException("用户名或密码错误");
         }
-
         // 2. 检查用户状态
         if (!"ACTIVE".equals(user.getStatus())) {
             throw new UserLoginException("账号已被禁用");
         }
-
         // 3. 验证密码
         String hashedPassword = DigestUtils.md5DigestAsHex(userLoginDTO.getPassword().getBytes());
         if (!user.getPassword().equals(hashedPassword)) {
             throw new UserLoginException("用户名或密码错误");
         }
-
         // 4. 生成JWT token 携带用户ID
         HashMap<String, Object> claims = new HashMap<>();
         claims.put(JwtClaimsConstant.USER_ID, user.getId());
         String token = JwtUtil.createJWT(jwtProperties.getSecretKey(), jwtProperties.getExpirationTime(), claims);
-
         // 5. 将token存储到Redis中，用于后续的登出管理
         String redisKey = RedisConstants.TOKEN_PREFIX + user.getUsername();
         redisTemplate.opsForValue().set(redisKey, token);
         // 设置与JWT相同的过期时间（毫秒转秒）
         redisTemplate.expire(redisKey, jwtProperties.getExpirationTime() / 1000, TimeUnit.SECONDS);
-
         // 6. 添加用户到在线用户集合
         redisTemplate.opsForSet().add(RedisConstants.ONLINE_USERS_KEY, user.getId().toString());
-
         // 7. 今日登录次数+1
         redisTemplate.opsForValue().increment(RedisConstants.DAILY_LOGIN_COUNT_KEY);
         // 设置过期时间为24小时，每天自动重置
         redisTemplate.expire(RedisConstants.DAILY_LOGIN_COUNT_KEY, RedisConstants.DAILY_EXPIRE, TimeUnit.SECONDS);
-
         // 8. 构建返回对象
         UserLoginVO userLoginVO = new UserLoginVO();
         userLoginVO.setId(user.getId());
         userLoginVO.setAuthorization(token);
-
         log.info("用户登录成功，用户ID：{}，用户名：{}", user.getId(), user.getUsername());
         return userLoginVO;
     }
@@ -190,6 +179,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         favoriteWrapper.eq("user_id", userId);
         userStatsVo.setFavoriteCount(favoriteMapper.selectCount(favoriteWrapper));
         return userStatsVo;
+    }
+
+    /**
+     * 获取系统统计信息
+     * @return
+     */
+    @Override
+    public UserOverviewDataVo getSystemOverview() {
+        UserOverviewDataVo userOverviewDataVo = new UserOverviewDataVo();
+        //查看总用户数
+        Long totalUsers = Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.TOTAL_USERS_KEY).toString());
+        if (totalUsers == null) {
+            totalUsers = userMapper.selectCount(new QueryWrapper<User>());
+            // 缓存总用户数,一小时过期
+            redisTemplate.opsForValue().set(RedisConstants.TOTAL_USERS_KEY, totalUsers.toString(), RedisConstants.CACHE_EXPIRE, TimeUnit.SECONDS);
+        }
+        userOverviewDataVo.setTotalUsers(totalUsers);
+        //查看总帖子数
+        Long totalDiscussions = Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.TOTAL_DISCUSSIONS_KEY).toString());
+        if (totalDiscussions == null) {
+            totalDiscussions = discussionMapper.selectCount(new QueryWrapper<Discussion>());
+            // 缓存总帖子数,一小时过期
+            redisTemplate.opsForValue().set(RedisConstants.TOTAL_DISCUSSIONS_KEY, totalDiscussions.toString(), RedisConstants.CACHE_EXPIRE, TimeUnit.SECONDS);
+        }
+        userOverviewDataVo.setTotalDiscussions(totalDiscussions);
+        userOverviewDataVo.setNewUsers(Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.NEW_USERS_KEY).toString()));
+        userOverviewDataVo.setNewDiscussions(Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.NEW_DISCUSSIONS_KEY).toString()));
+        // 包括：总用户数、总帖子数、今日新增用户数、新增帖子数、新增回复数等
+        return userOverviewDataVo;
     }
 
     @Override
@@ -332,18 +350,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @return 包含在线用户数和今日登录次数的Map
      */
     @Override
-    public Map<String, Object> getLoginStats() {
-        Map<String, Object> stats = new HashMap<>();
-
+    public UserLoginStatsVo getLoginStats() {
+        UserLoginStatsVo stats = new UserLoginStatsVo();
         // 获取在线用户数
         Long onlineCount = redisTemplate.opsForSet().size(RedisConstants.ONLINE_USERS_KEY);
-        stats.put("onlineUsers", onlineCount != null ? onlineCount : 0);
-
+        stats.setOnlineUsers(onlineCount != null ? onlineCount : 0);
         // 获取今日登录次数
         String dailyCountStr = redisTemplate.opsForValue().get(RedisConstants.DAILY_LOGIN_COUNT_KEY);
-        Integer dailyCount = dailyCountStr != null ? Integer.parseInt(dailyCountStr) : 0;
-        stats.put("dailyLoginCount", dailyCount);
-
+        Long dailyCount = dailyCountStr != null ? Long.parseLong(dailyCountStr) : 0;
+        stats.setDailyLoginCount(dailyCount);
         return stats;
     }
 
@@ -368,7 +383,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Page<User> userPage = userMapper.selectPage(pageInfo, wrapper);
         return new PageResult(userPage.getTotal(), userPage.getRecords());
     }
-
 
     /**
      * 用户统计

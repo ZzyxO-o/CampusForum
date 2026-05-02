@@ -12,10 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 
 @Slf4j
@@ -31,7 +28,7 @@ public class AIController {
     @GetMapping("/chat")
     @Operation(summary = "AI对话", description = "与AI学习助手进行对话")
     public Result<ChatVO> chat(ChatDto chatDto) {
-        ChatVO chatVO = aiService.chat(chatDto);
+    ChatVO chatVO = aiService.chat(chatDto);
         return Result.success(chatVO);
     }
 
@@ -45,8 +42,14 @@ public class AIController {
     @Operation(summary = "获取AI对话记录", description = "获取AI对话助手的对话记录")
     public Result getChatMemory(ChatMemoryDto chatMemoryDto) {
         ChatMemoryVo chatMemoryVo = aiService.getChatMemory(chatMemoryDto);
-        return Result.success();
+        return Result.success(chatMemoryVo);
     }
+
+//    @GetMapping("/sessions/{userId}")
+//    @Operation(summary = "获取用户会话", description = "获取当前用户的AI会话")
+//    public Result getUserSession(@PathVariable Long userId) {
+//        return Result.success(aiService.getUserSession(userId));
+//    }
 
     @GetMapping("/image/{description}")
     @Operation(summary = "AI图片生成", description = "与AI学习助手进行图片生成")
@@ -55,5 +58,4 @@ public class AIController {
         String imageUrl = aiService.image(description);
         return Result.success(imageUrl);
     }
-
 }

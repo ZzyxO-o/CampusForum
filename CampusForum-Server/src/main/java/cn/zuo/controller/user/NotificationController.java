@@ -22,11 +22,12 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @GetMapping
-    @Operation(summary = "获取通知列表", description = "获取当前用户的通知列表")
+    @Operation(summary = "获取所有通知列表", description = "获取当前用户的所有通知列表")
     public Result<PageResult<Notification>> getNotifications(NotificationPageQueryDto notificationPageQueryDto) {
         log.info("获取通知列表: {}", notificationPageQueryDto);
         return Result.success(notificationService.getUserNotifications(notificationPageQueryDto));
     }
+
 
     @GetMapping("/unread/count")
     @Operation(summary = "获取未读通知数量", description = "获取当前用户的未读通知数量")
@@ -51,4 +52,13 @@ public class NotificationController {
         notificationService.markAllAsRead();
         return Result.success("全部标记已读成功");
     }
+
+    @DeleteMapping("/clear/all/{userId}")
+    @Operation(summary = "清空通知", description = "清空当前用户的所有通知")
+    public Result<String> clearAllNotifications(@Parameter(description = "用户ID") @PathVariable Long userId) {
+        log.info("清空所有通知: {}", userId);
+        notificationService.deleteAllNotifications(userId);
+        return Result.success("通知清空成功");
+    }
+
 }

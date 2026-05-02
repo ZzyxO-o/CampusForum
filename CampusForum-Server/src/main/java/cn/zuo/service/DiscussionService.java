@@ -99,4 +99,10 @@ public interface DiscussionService extends IService<Discussion> {
      * @param discussionId
      */
     void adminDeleteDiscussion(Long discussionId);
+
+    /**
+     * 获取总帖子数
+     * @return
+     */
+    Long getTotalDiscussions();
 }

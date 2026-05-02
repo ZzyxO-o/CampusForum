@@ -16,4 +16,11 @@ public class RedisConstants {
     public static final int SESSION_EXPIRE = 1800;  // 30分钟
     public static final int CACHE_EXPIRE = 3600;    // 1小时
     public static final int DAILY_EXPIRE = 86400; // 24小时
+
+    // 系统统计相关
+    public static final String TOTAL_USERS_KEY = "data:total:users";
+    public static final String TOTAL_DISCUSSIONS_KEY = "data:total:discussions";
+    public static final String NEW_USERS_KEY = "data:new:users";
+    public static final String NEW_DISCUSSIONS_KEY = "data:new:discussions";
+    public static final String NEW_REPLIES_KEY = "data:new:replies";
 }

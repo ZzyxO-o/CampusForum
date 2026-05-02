@@ -6,6 +6,5 @@ import lombok.Data;
 public class ChatDto {
     private Long userId;
     private Long sessionId;
-    private String promptType;
     private String userInput;
 }

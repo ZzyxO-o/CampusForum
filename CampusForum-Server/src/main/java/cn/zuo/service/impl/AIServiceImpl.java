@@ -61,14 +61,13 @@ public class AIServiceImpl implements AIService {
     @Override
     public ChatVO chat(ChatDto chatDto) {
         //查缓存中AI的系统提示词的占位符内容
-        String systemPrompt = (String) redisTemplate.opsForValue().get("ChatClient_system_prompt" + chatDto.getPromptType());
+        String systemPrompt = (String) redisTemplate.opsForValue().get("ChatClient_system_prompt");
         if (systemPrompt == null) {
             log.info("缓存中AI的系统提示词的占位符内容不存在,更新");
             QueryWrapper<SystemPrompt> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("prompt_type", chatDto.getPromptType());
             systemPrompt = systemPromptMapper.selectOne(queryWrapper).getPrompt();
             //缓存系统提示词
-            redisTemplate.opsForValue().set("ChatClient_system_prompt" + chatDto.getPromptType(), systemPrompt);
+            redisTemplate.opsForValue().set("ChatClient_system_prompt", systemPrompt);
         }
 
         MessageChatMemoryAdvisor messageChatMemoryAdvisor = MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder()
@@ -98,14 +97,13 @@ public class AIServiceImpl implements AIService {
     @Override
     public Flux<String> chatStream(ChatDto chatDto) {
         //查缓存中AI的系统提示词的占位符内容
-        String systemPrompt = (String) redisTemplate.opsForValue().get("simple_dashScope_chatClient_system_prompt" + chatDto.getPromptType());
+        String systemPrompt = (String) redisTemplate.opsForValue().get("ChatClient_system_prompt");
         if (systemPrompt == null) {
             log.info("缓存中AI的系统提示词的占位符内容不存在,更新");
             QueryWrapper<SystemPrompt> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("prompt_type", chatDto.getPromptType());
             systemPrompt = systemPromptMapper.selectOne(queryWrapper).getPrompt();
             //缓存系统提示词
-            redisTemplate.opsForValue().set("simple_dashScope_chatClient_system_prompt" + chatDto.getPromptType(), systemPrompt);
+            redisTemplate.opsForValue().set("ChatClient_system_prompt", systemPrompt);
         }
         MessageChatMemoryAdvisor messageChatMemoryAdvisor = MessageChatMemoryAdvisor.builder(MessageWindowChatMemory.builder()
                         .maxMessages(20)

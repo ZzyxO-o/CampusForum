@@ -1,13 +1,12 @@
 package cn.zuo.controller.admin;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/admin/replies")
+@RequestMapping("/api/admin/ai")
 @Slf4j
-@Tag(name = "管理员回复管理", description = "管理员对回复的管理操作")
-public class AdminReplyController {
+public class AdminAIController {
+
 }

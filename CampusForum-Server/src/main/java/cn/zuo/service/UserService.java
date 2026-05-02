@@ -3,13 +3,9 @@ package cn.zuo.service;
 import cn.zuo.dto.userdto.*;
 import cn.zuo.entity.User;
 import cn.zuo.result.PageResult;
-import cn.zuo.vo.uservo.UserLoginVO;
-import cn.zuo.vo.uservo.UserRegisterVO;
 import cn.zuo.vo.admin.AdminUserStatsVo;
-import cn.zuo.vo.uservo.UserStatsVo;
+import cn.zuo.vo.uservo.*;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.Map;
 
 public interface UserService extends IService<User> {
     /**
@@ -69,7 +65,7 @@ public interface UserService extends IService<User> {
      * 获取登录统计数据
      * @return 包含在线用户数和今日登录次数的Map
      */
-    Map<String, Object> getLoginStats();
+    UserLoginStatsVo getLoginStats();
 
     /**
      * 获取用户列表（分页）
@@ -89,4 +85,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     UserStatsVo getUserStatsByUserId(Long userId);
+
+    UserOverviewDataVo getSystemOverview();
 }
