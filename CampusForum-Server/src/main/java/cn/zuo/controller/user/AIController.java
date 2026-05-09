@@ -1,19 +1,24 @@
 package cn.zuo.controller.user;
 
 import cn.zuo.dto.aidto.ChatDto;
-import cn.zuo.dto.aidto.ChatMemoryDto;
 import cn.zuo.result.Result;
 import cn.zuo.service.AIService;
+import cn.zuo.service.AiChatMemoryService;
 import cn.zuo.vo.chat.ChatMemoryVo;
+import cn.zuo.vo.chat.ChatSessionsVo;
 import cn.zuo.vo.chat.ChatVO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,6 +29,9 @@ public class AIController {
 
     @Resource
     private AIService aiService;
+
+    @Resource
+    private AiChatMemoryService aiChatMemoryService;
 
     @GetMapping("/chat")
     @Operation(summary = "AI对话", description = "与AI学习助手进行对话")
@@ -38,24 +46,13 @@ public class AIController {
         return aiService.chatStream(chatDto);
     }
 
-    @GetMapping("/chatMemory")
-    @Operation(summary = "获取AI对话记录", description = "获取AI对话助手的对话记录")
-    public Result getChatMemory(ChatMemoryDto chatMemoryDto) {
-        ChatMemoryVo chatMemoryVo = aiService.getChatMemory(chatMemoryDto);
-        return Result.success(chatMemoryVo);
-    }
+    @GetMapping("/sessions/{userId}")
+    @Operation(summary = "获取用户所有会话", description = "获取当前用户的AI会话")
+    public Result<List<ChatSessionsVo>> getUserSessions(@PathVariable Long userId) {return Result.success(aiChatMemoryService.getUserSessions(userId));}
 
-//    @GetMapping("/sessions/{userId}")
-//    @Operation(summary = "获取用户会话", description = "获取当前用户的AI会话")
-//    public Result getUserSession(@PathVariable Long userId) {
-//        return Result.success(aiService.getUserSession(userId));
-//    }
-
-    @GetMapping("/image/{description}")
-    @Operation(summary = "AI图片生成", description = "与AI学习助手进行图片生成")
-    public Result<String> image(@Parameter(description = "图片生成描述") @PathVariable String description) {
-        log.info("图片生成描述：{}", description);
-        String imageUrl = aiService.image(description);
-        return Result.success(imageUrl);
+    @GetMapping("/session/{conversationId}")
+    @Operation(summary = "获取会话详情", description = "根据会话ID获取会话详情")
+    public Result<List<ChatMemoryVo>> getSession(@PathVariable String conversationId) {
+        return Result.success(aiChatMemoryService.getUserSessionDetail(conversationId));
     }
 }

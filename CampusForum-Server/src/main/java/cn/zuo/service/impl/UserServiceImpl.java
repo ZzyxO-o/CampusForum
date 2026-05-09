@@ -13,7 +13,9 @@ import cn.zuo.service.UserService;
 import cn.zuo.utils.JwtUtil;
 import cn.zuo.utils.ThreadLocalUtil;
 import cn.zuo.vo.admin.AdminUserStatsVo;
+import cn.zuo.vo.admin.DailyStatVo;
 import cn.zuo.vo.uservo.*;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -25,8 +27,12 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -208,6 +214,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userOverviewDataVo.setNewDiscussions(Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.NEW_DISCUSSIONS_KEY).toString()));
         // 包括：总用户数、总帖子数、今日新增用户数、新增帖子数、新增回复数等
         return userOverviewDataVo;
+    }
+
+    /**
+     *
+     * @param days
+     * @return
+     */
+    @Override
+    public List<DailyStatVo> getDailyStats(Integer days) {
+        List<DailyStatVo> stats = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        for (int i = days - 1; i >= 0; i--) {
+            LocalDate date = today.minusDays(i);
+            LocalDateTime startOfDay = date.atStartOfDay();
+            LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+            Long newUsers = userMapper.selectCount(new LambdaQueryWrapper<User>()
+                    .ge(User::getCreatedTime, startOfDay)
+                    .le(User::getCreatedTime, endOfDay));
+            Long newDiscussions = discussionMapper.selectCount(new LambdaQueryWrapper<Discussion>()
+                    .ge(Discussion::getCreatedTime, startOfDay)
+                    .le(Discussion::getCreatedTime, endOfDay));
+            Long newReplies = replyMapper.selectCount(new LambdaQueryWrapper<Reply>()
+                    .ge(Reply::getCreatedTime, startOfDay)
+                    .le(Reply::getCreatedTime, endOfDay));
+            stats.add(new DailyStatVo(date, newUsers, newDiscussions, newReplies));
+        }
+        return stats;
     }
 
     @Override

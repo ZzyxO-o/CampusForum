@@ -4,8 +4,11 @@ import cn.zuo.dto.userdto.*;
 import cn.zuo.entity.User;
 import cn.zuo.result.PageResult;
 import cn.zuo.vo.admin.AdminUserStatsVo;
+import cn.zuo.vo.admin.DailyStatVo;
 import cn.zuo.vo.uservo.*;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 public interface UserService extends IService<User> {
     /**
@@ -87,4 +90,11 @@ public interface UserService extends IService<User> {
     UserStatsVo getUserStatsByUserId(Long userId);
 
     UserOverviewDataVo getSystemOverview();
+
+    /**
+     * 获取最近N天的用户注册统计
+     * @param days
+     * @return
+     */
+    List<DailyStatVo> getDailyStats(Integer days);
 }

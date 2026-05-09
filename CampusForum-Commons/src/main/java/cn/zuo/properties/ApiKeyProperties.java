@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
 @Data
 public class ApiKeyProperties {
     @Value("${spring.ai.dashscope.api-key}")
-    private String DashScopeApiKey;
+    private String dashScopeApiKey;
 }

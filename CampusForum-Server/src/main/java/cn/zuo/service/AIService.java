@@ -21,16 +21,17 @@ public interface AIService {
      */
     Flux<String> chatStream(ChatDto chatDto);
 
-    /**
-     * ai图片生成接口
-     * @param description
-     * @return
-     */
-    String image(String description);
+//    /**
+//     * ai图片生成接口
+//     * @param description
+//     * @return
+//     */
+//    String image(String description);
 
     /**
      * @param chatMemoryDto
      * @return
      */
     ChatMemoryVo getChatMemory(ChatMemoryDto chatMemoryDto);
+
 }

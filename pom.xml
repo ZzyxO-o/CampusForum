@@ -44,6 +44,8 @@
 		<mysql.version>8.0.33</mysql.version>
 		<!-- Spring AI Alibaba版本 -->
 		<spring-ai-alibaba.version>1.1.2.0</spring-ai-alibaba.version>
+		<!-- Spring AI版本 -->
+		<spring-ai.version>1.0.0-M8</spring-ai.version>
 		<!-- Knife4j版本 -->
 		<knife4j.version>3.0.2</knife4j.version>
 		<!-- 编译和编码设置 -->
@@ -120,6 +122,24 @@
 			<dependency>
 				<groupId>com.alibaba.cloud.ai</groupId>
 				<artifactId>spring-ai-alibaba-starter-memory-redis</artifactId>
+				<version>${spring-ai-alibaba.version}</version>
+			</dependency>
+			<!-- poi文档读取依赖 -->
+			<dependency>
+				<groupId>com.alibaba.cloud.ai</groupId>
+				<artifactId>spring-ai-alibaba-starter-document-reader-poi</artifactId>
+				<version>${spring-ai-alibaba.version}</version>
+			</dependency>
+			<!-- springAI向量数据库Qdrant -->
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-starter-vector-store-qdrant</artifactId>
+				<version>${spring-ai.version}</version>
+			</dependency>
+			<!-- poi文档读取依赖 -->
+			<dependency>
+				<groupId>com.alibaba.cloud.ai</groupId>
+				<artifactId>spring-ai-alibaba-starter-document-reader-poi</artifactId>
 				<version>${spring-ai-alibaba.version}</version>
 			</dependency>
 			<!-- Knife4j API文档 -->

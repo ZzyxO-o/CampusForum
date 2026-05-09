@@ -13,6 +13,7 @@ import cn.zuo.mapper.ReplyMapper;
 import cn.zuo.result.PageResult;
 import cn.zuo.service.DiscussionService;
 import cn.zuo.utils.ThreadLocalUtil;
+import cn.zuo.vo.admin.CategoryStatVo;
 import cn.zuo.vo.discussionvo.DiscussionDetailVo;
 import cn.zuo.vo.discussionvo.DiscussionMessageVo;
 import cn.zuo.vo.discussionvo.HotTitleVo;
@@ -281,6 +282,11 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     }
 
 
+
+    @Override
+    public List<CategoryStatVo> getCategoryStats() {
+        return discussionMapper.countByCategory();
+    }
 
     @Override
     public boolean incrementViewCount(Long discussionId) {

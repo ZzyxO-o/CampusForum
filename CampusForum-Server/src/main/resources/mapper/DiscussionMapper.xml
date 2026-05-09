@@ -47,4 +47,11 @@
         WHERE id = #{discussionId}
     </update>
 
+    <select id="countByCategory" resultType="cn.zuo.vo.admin.CategoryStatVo">
+        SELECT category, COUNT(*) AS count
+        FROM discussions
+        WHERE status != 'deleted'
+        GROUP BY category
+    </select>
+
 </mapper>

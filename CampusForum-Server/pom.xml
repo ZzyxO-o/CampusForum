@@ -78,11 +78,17 @@
             <groupId>com.alibaba.cloud.ai</groupId>
             <artifactId>spring-ai-alibaba-starter-memory-redis</artifactId>
         </dependency>
-<!--        &lt;!&ndash; 向量数据库Qdrant &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.ai</groupId>-->
-<!--            <artifactId>spring-ai-starter-vector-store-qdrant</artifactId>-->
-<!--        </dependency>-->
+        <!-- poi文档读取依赖 -->
+        <dependency>
+            <groupId>com.alibaba.cloud.ai</groupId>
+            <artifactId>spring-ai-alibaba-starter-document-reader-poi</artifactId>
+        </dependency>
+        <!-- 向量数据库Qdrant -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-vector-store-qdrant</artifactId>
+        </dependency>
+
 <!--        <dependency>-->
 <!--            <groupId>com.alibaba.cloud.ai</groupId>-->
 <!--            <artifactId>spring-ai-alibaba-starter-cache</artifactId>-->

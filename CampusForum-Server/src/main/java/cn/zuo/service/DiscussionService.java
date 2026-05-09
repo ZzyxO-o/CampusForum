@@ -105,4 +105,10 @@ public interface DiscussionService extends IService<Discussion> {
      * @return
      */
     Long getTotalDiscussions();
+
+    /**
+     * 获取各分类帖子数量统计
+     * @return
+     */
+    List<cn.zuo.vo.admin.CategoryStatVo> getCategoryStats();
 }

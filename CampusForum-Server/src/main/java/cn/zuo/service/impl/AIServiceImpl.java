@@ -9,7 +9,6 @@ import cn.zuo.mapper.SystemPromptMapper;
 import cn.zuo.service.AIService;
 import cn.zuo.vo.chat.ChatMemoryVo;
 import cn.zuo.vo.chat.ChatVO;
-import com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions;
 import com.alibaba.cloud.ai.memory.jdbc.MysqlChatMemoryRepository;
 import com.alibaba.cloud.ai.memory.redis.RedissonRedisChatMemoryRepository;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -19,12 +18,9 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.converter.BeanOutputConverter;
-import org.springframework.ai.image.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -36,8 +32,8 @@ public class AIServiceImpl implements AIService {
     @Resource(name = "MaxDashScopeChatClient")
     private ChatClient maxDashScopeChatClient;
 
-    @Resource
-    private ImageModel imageModel;
+//    @Resource
+//    private ImageModel imageModel;
 
     @Resource
     private MysqlChatMemoryRepository mysqlChatMemoryRepository;
@@ -126,28 +122,6 @@ public class AIServiceImpl implements AIService {
                 .onErrorReturn("data: 抱歉，AI服务暂时不可用，请稍后重试\n\n");
     }
 
-
-
-    /**
-     * ai图片生成
-     * @param description
-     * @return
-     */
-    @Override
-    public String image(String description) {
-        DashScopeImageOptions dashScopeImageOptions = DashScopeImageOptions.builder()
-                .withHeight(1024)
-                .withWidth(1024).build();
-        ImagePrompt imagePrompt = new ImagePrompt(description, dashScopeImageOptions);
-        ImageResponse imageResponse = imageModel.call(imagePrompt);
-        String resultUrl = Optional.ofNullable(imageResponse)
-                .map(ImageResponse::getResult)
-                .map(ImageGeneration::getOutput)
-                .map(Image::getUrl)
-                .orElse("生成失败，请重试");
-        return resultUrl;
-    }
-
     @Override
     public ChatMemoryVo getChatMemory(ChatMemoryDto chatMemoryDto) {
         String conversationId = chatMemoryDto.getUserId() + "_" + chatMemoryDto.getSessionId();
@@ -159,4 +133,5 @@ public class AIServiceImpl implements AIService {
         chatMemoryVo.setTimestamp(aiChatMemory.getTimestamp());
         return chatMemoryVo;
     }
+
 }

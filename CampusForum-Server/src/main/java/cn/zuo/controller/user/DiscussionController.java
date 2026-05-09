@@ -86,5 +86,4 @@ public class DiscussionController {
         log.info("获取用户讨论列表: {}", discussionPageQueryByUserDto);
         return Result.success(discussionService.getUserDiscussions(discussionPageQueryByUserDto));
     }
-
 }

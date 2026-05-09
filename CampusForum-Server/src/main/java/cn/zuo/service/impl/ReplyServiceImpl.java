@@ -73,11 +73,9 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
         if ("closed".equals(discussion.getStatus())) {
             throw new ReplyQueryException("讨论已关闭，无法回复");
         }
-
         // 创建回复对象
         Reply reply = new Reply();
         BeanUtils.copyProperties(replyDto, reply);
-
         // 设置回复层级
         if (replyDto.getParentReplyId() != null && replyDto.getParentReplyId() > 0) {
             // 如果是子回复，验证父回复是否存在
@@ -99,7 +97,6 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
         reply.setLikeCount(0);
         reply.setCreatedTime(LocalDateTime.now());
         reply.setUpdatedTime(LocalDateTime.now());
-
         // 插入数据库
         replyMapper.insert(reply);
         User user = userMapper.selectById(userId);
@@ -114,12 +111,10 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
         notification.setIsRead(Boolean.FALSE);
         notification.setCreatedTime(LocalDateTime.now());
         notificationMapper.insert(notification);
-
         // 更新讨论的回复数
         discussion.setReplyCount(discussion.getReplyCount() + 1);
         discussion.setUpdatedTime(LocalDateTime.now());
         discussionMapper.updateById(discussion);
-
         // 返回结果
         ReplyMessageVo replyMessageVo = new ReplyMessageVo();
         replyMessageVo.setReplyId(reply.getId());

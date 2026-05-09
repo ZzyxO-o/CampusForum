@@ -7,10 +7,7 @@ import cn.zuo.dto.userdto.UserUpdateDTO;
 import cn.zuo.entity.User;
 import cn.zuo.result.Result;
 import cn.zuo.service.UserService;
-import cn.zuo.vo.uservo.UserLoginStatsVo;
-import cn.zuo.vo.uservo.UserLoginVO;
-import cn.zuo.vo.uservo.UserRegisterVO;
-import cn.zuo.vo.uservo.UserStatsVo;
+import cn.zuo.vo.uservo.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -53,11 +50,6 @@ public class UserController {
         return Result.success(user);
     }
 
-    /**
-     * 获取当前用户统计信息
-     * @param
-     * @return
-     */
     @GetMapping("/getUserStats/{userId}")
     @Operation(summary = "获取用户统计信息", description = "根据用户ID获取用户统计信息")
     public Result<UserStatsVo> getUserStats(@PathVariable Long userId) {
@@ -112,6 +104,12 @@ public class UserController {
         //TODO
         UserLoginStatsVo stats = userService.getLoginStats();
         return Result.success(stats);
+    }
+
+    @GetMapping("/overview")
+    @Operation(summary = "系统总览", description = "获取系统总览数据")
+    public Result<UserOverviewDataVo> getSystemOverview() {
+        return Result.success(userService.getSystemOverview());
     }
 
 }

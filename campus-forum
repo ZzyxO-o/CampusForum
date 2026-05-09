@@ -1,0 +1,242 @@
+2026-05-09T16:09:41.232+08:00  INFO 32068 --- [CampusForum] [main] cn.zuo.CampusForumApplication            : Starting CampusForumApplication using Java 21.0.8 with PID 32068 (E:\CampusForum\CampusForum-Server\target\classes started by 86189 in E:\CampusForum)
+2026-05-09T16:09:41.235+08:00  INFO 32068 --- [CampusForum] [main] cn.zuo.CampusForumApplication            : The following 1 profile is active: "dev"
+2026-05-09T16:09:42.858+08:00  INFO 32068 --- [CampusForum] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-09T16:09:42.861+08:00  INFO 32068 --- [CampusForum] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-09T16:09:42.918+08:00  INFO 32068 --- [CampusForum] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 0 Redis repository interfaces.
+2026-05-09T16:09:43.027+08:00 DEBUG 32068 --- [CampusForum] [main] org.apache.ibatis.logging.LogFactory     : Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+2026-05-09T16:09:43.731+08:00  INFO 32068 --- [CampusForum] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-05-09T16:09:43.747+08:00  INFO 32068 --- [CampusForum] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-09T16:09:43.747+08:00  INFO 32068 --- [CampusForum] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T16:09:43.817+08:00  INFO 32068 --- [CampusForum] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-09T16:09:43.817+08:00  INFO 32068 --- [CampusForum] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2534 ms
+2026-05-09T16:09:44.978+08:00  WARN 32068 --- [CampusForum] [main] io.qdrant.client.QdrantGrpcClient        : Qdrant client version 1.13.0 is incompatible with server version 1.17.1. Major versions should match and minor version difference must not exceed 1. Set checkCompatibility=false to skip version check.
+2026-05-09T16:09:45.251+08:00  INFO 32068 --- [CampusForum] [main] c.z.c.database.VectorInitConfiguration   : VectorInitConfig-向量数据库初始化完毕
+2026-05-09T16:09:45.865+08:00 DEBUG 32068 --- [CampusForum] [main] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Registered plugin: 'com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor@2332879a'
+2026-05-09T16:09:46.107+08:00 DEBUG 32068 --- [CampusForum] [main] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [E:\CampusForum\CampusForum-Server\target\classes\mapper\DiscussionMapper.xml]'
+2026-05-09T16:09:46.141+08:00 DEBUG 32068 --- [CampusForum] [main] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [E:\CampusForum\CampusForum-Server\target\classes\mapper\ReplyMapper.xml]'
+2026-05-09T16:09:46.159+08:00 DEBUG 32068 --- [CampusForum] [main] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [E:\CampusForum\CampusForum-Server\target\classes\mapper\UserMapper.xml]'
+2026-05-09T16:09:46.660+08:00  INFO 32068 --- [CampusForum] [main] org.redisson.Version                     : Redisson 3.52.0
+2026-05-09T16:09:46.919+08:00  INFO 32068 --- [CampusForum] [redisson-netty-4-5] o.redisson.connection.ConnectionsHolder  : 1 connections initialized for localhost/127.0.0.1:6379
+2026-05-09T16:09:47.000+08:00  INFO 32068 --- [CampusForum] [redisson-netty-4-20] o.redisson.connection.ConnectionsHolder  : 24 connections initialized for localhost/127.0.0.1:6379
+2026-05-09T16:09:47.571+08:00  INFO 32068 --- [CampusForum] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-09T16:09:47.579+08:00  INFO 32068 --- [CampusForum] [main] cn.zuo.CampusForumApplication            : Started CampusForumApplication in 6.938 seconds (process running for 9.798)
+2026-05-09T16:09:47.583+08:00 DEBUG 32068 --- [CampusForum] [main] c.b.m.a.DdlApplicationRunner             :   ...  DDL start create  ...  
+2026-05-09T16:09:47.584+08:00 DEBUG 32068 --- [CampusForum] [main] c.b.m.a.DdlApplicationRunner             :   ...  DDL end create  ...  
+2026-05-09T16:23:00.219+08:00  INFO 32068 --- [CampusForum] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-09T16:23:00.227+08:00  INFO 32068 --- [CampusForum] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2026-05-09T16:23:00.238+08:00  INFO 32068 --- [CampusForum] [SpringApplicationShutdownHook] .a.m.r.RedissonRedisChatMemoryRepository : Shutting down Redisson with 32 active connections
+2026-05-09T16:23:00.249+08:00  INFO 32068 --- [CampusForum] [SpringApplicationShutdownHook] .a.m.r.RedissonRedisChatMemoryRepository : Redisson client shutdown completed
+2026-05-09T16:23:08.019+08:00  INFO 40328 --- [CampusForum] [main] cn.zuo.CampusForumApplication            : Starting CampusForumApplication using Java 21.0.8 with PID 40328 (E:\CampusForum\CampusForum-Server\target\classes started by 86189 in E:\CampusForum)
+2026-05-09T16:23:08.021+08:00  INFO 40328 --- [CampusForum] [main] cn.zuo.CampusForumApplication            : The following 1 profile is active: "dev"
+2026-05-09T16:23:09.121+08:00  INFO 40328 --- [CampusForum] [main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2026-05-09T16:23:09.123+08:00  INFO 40328 --- [CampusForum] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-05-09T16:23:09.186+08:00  INFO 40328 --- [CampusForum] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 41 ms. Found 0 Redis repository interfaces.
+2026-05-09T16:23:09.295+08:00 DEBUG 40328 --- [CampusForum] [main] org.apache.ibatis.logging.LogFactory     : Logging initialized using 'class org.apache.ibatis.logging.slf4j.Slf4jImpl' adapter.
+2026-05-09T16:23:10.033+08:00  INFO 40328 --- [CampusForum] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-05-09T16:23:10.053+08:00  INFO 40328 --- [CampusForum] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-09T16:23:10.054+08:00  INFO 40328 --- [CampusForum] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.50]
+2026-05-09T16:23:10.126+08:00  INFO 40328 --- [CampusForum] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-05-09T16:23:10.126+08:00  INFO 40328 --- [CampusForum] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2064 ms
+2026-05-09T16:23:11.226+08:00  WARN 40328 --- [CampusForum] [main] io.qdrant.client.QdrantGrpcClient        : Qdrant client version 1.13.0 is incompatible with server version 1.17.1. Major versions should match and minor version difference must not exceed 1. Set checkCompatibility=false to skip version check.
+2026-05-09T16:23:11.525+08:00  INFO 40328 --- [CampusForum] [main] c.z.c.database.VectorInitConfiguration   : VectorInitConfig-向量数据库初始化完毕
+2026-05-09T16:23:12.117+08:00 DEBUG 40328 --- [CampusForum] [main] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Registered plugin: 'com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor@40dcdd04'
+2026-05-09T16:23:12.366+08:00 DEBUG 40328 --- [CampusForum] [main] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [E:\CampusForum\CampusForum-Server\target\classes\mapper\DiscussionMapper.xml]'
+2026-05-09T16:23:12.400+08:00 DEBUG 40328 --- [CampusForum] [main] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [E:\CampusForum\CampusForum-Server\target\classes\mapper\ReplyMapper.xml]'
+2026-05-09T16:23:12.421+08:00 DEBUG 40328 --- [CampusForum] [main] c.b.m.e.s.MybatisSqlSessionFactoryBean   : Parsed mapper file: 'file [E:\CampusForum\CampusForum-Server\target\classes\mapper\UserMapper.xml]'
+2026-05-09T16:23:12.891+08:00  INFO 40328 --- [CampusForum] [main] org.redisson.Version                     : Redisson 3.52.0
+2026-05-09T16:23:13.170+08:00  INFO 40328 --- [CampusForum] [redisson-netty-4-5] o.redisson.connection.ConnectionsHolder  : 1 connections initialized for localhost/127.0.0.1:6379
+2026-05-09T16:23:13.255+08:00  INFO 40328 --- [CampusForum] [redisson-netty-4-20] o.redisson.connection.ConnectionsHolder  : 24 connections initialized for localhost/127.0.0.1:6379
+2026-05-09T16:23:13.892+08:00  INFO 40328 --- [CampusForum] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-09T16:23:13.901+08:00  INFO 40328 --- [CampusForum] [main] cn.zuo.CampusForumApplication            : Started CampusForumApplication in 6.648 seconds (process running for 8.245)
+2026-05-09T16:23:13.904+08:00 DEBUG 40328 --- [CampusForum] [main] c.b.m.a.DdlApplicationRunner             :   ...  DDL start create  ...  
+2026-05-09T16:23:13.905+08:00 DEBUG 40328 --- [CampusForum] [main] c.b.m.a.DdlApplicationRunner             :   ...  DDL end create  ...  
+2026-05-09T16:57:04.082+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-09T16:57:04.084+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-09T16:57:04.092+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
+2026-05-09T16:57:04.245+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.controller.user.UserController    : 用户登录：UserLoginDTO(username=admin , password=123456)
+2026-05-09T16:57:04.364+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-05-09T16:57:04.385+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@de834f9
+2026-05-09T16:57:04.387+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-05-09T16:57:04.496+08:00 ERROR 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.handler.GlobalExceptionHandler    : 业务异常信息：用户名或密码错误
+2026-05-09T16:57:34.036+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.controller.user.UserController    : 用户登录：UserLoginDTO(username=admin, password=123456)
+2026-05-09T16:57:34.405+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.service.impl.UserServiceImpl      : 用户登录成功，用户ID：1，用户名：admin
+2026-05-09T16:57:34.417+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:34.448+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:34.453+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.controller.user.UserController    : 根据id获取用户信息：1
+2026-05-09T16:57:34.472+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:34.474+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:34.474+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.controller.user.UserController    : 根据id获取用户信息：1
+2026-05-09T16:57:34.770+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:34.772+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:34.782+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:57:34.808+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:34.808+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:34.810+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:34.810+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:34.811+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] c.z.c.user.DiscussionController          : 获取热门标题
+2026-05-09T16:57:34.811+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] c.z.c.user.NotificationController        : 获取未读通知数量
+2026-05-09T16:57:34.907+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:34.907+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:34.907+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:34.910+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:34.910+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:34.910+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:34.911+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.controller.user.UserController    : 根据id获取用户信息：7
+2026-05-09T16:57:34.911+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.controller.user.UserController    : 根据id获取用户信息：1
+2026-05-09T16:57:34.911+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.controller.user.UserController    : 根据id获取用户信息：6
+2026-05-09T16:57:39.290+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:39.290+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:39.293+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:39.293+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:39.293+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:39.293+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:39.294+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:57:39.297+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:39.297+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:39.297+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:57:39.298+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:58:00.217+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:00.219+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:00.220+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=2, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:58:01.167+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:01.183+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:01.184+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=3, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:58:19.210+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:19.212+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:19.213+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] c.z.c.user.NotificationController        : 获取通知列表: NotificationPageQueryDto(userId=1, page=1, size=10, type=all)
+2026-05-09T16:58:20.978+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:20.981+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:20.984+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] c.z.c.user.NotificationController        : 标记通知为已读: 23
+2026-05-09T16:58:22.399+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:22.400+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:22.402+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:58:22.403+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:22.404+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:22.405+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] c.z.c.user.DiscussionController          : 获取热门标题
+2026-05-09T16:58:25.000+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:25.002+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:25.002+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.controller.user.UserController    : 根据id获取用户信息：1
+2026-05-09T16:58:25.013+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:25.015+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:25.015+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.controller.user.UserController    : 获取用户统计信息：1
+2026-05-09T16:58:30.314+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:30.317+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:30.320+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:30.320+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:30.320+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:30.320+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:30.323+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:30.323+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:30.323+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:30.323+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:30.323+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:58:32.617+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:32.618+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:32.620+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:32.620+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:58:32.621+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:32.621+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] c.z.c.user.DiscussionController          : 获取热门标题
+2026-05-09T16:58:46.938+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:46.940+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:46.940+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:46.940+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:58:46.943+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:46.943+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] c.z.c.user.DiscussionController          : 获取热门标题
+2026-05-09T16:58:47.983+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:47.986+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:51.098+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:51.100+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:52.003+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:52.004+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:53.496+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:53.498+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:54.189+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:54.191+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:54.502+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:54.504+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:55.071+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:55.072+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:55.386+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:55.388+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:55.658+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:55.660+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:58:59.635+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:58:59.638+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:00.065+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:00.068+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:01.139+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:01.140+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:01.396+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:01.397+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:01.781+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:01.784+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:03.043+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:03.045+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:03.305+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:03.306+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:07.277+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:07.278+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:07.619+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:07.620+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:07.965+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:07.968+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:08.369+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:08.370+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:09.124+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:09.126+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:09.475+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:09.477+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:19.204+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:19.206+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:19.215+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:19.215+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:19.215+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:19.217+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T16:59:19.217+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:19.217+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:19.217+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T16:59:19.218+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T16:59:19.219+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:01:05.873+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:01:05.876+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:01:05.885+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] c.z.controller.admin.AdminAIController   : 更新系统提示词，id: 1
+2026-05-09T17:01:05.894+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:01:05.897+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:01:16.674+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:01:16.676+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:01:16.678+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T17:01:16.678+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:01:16.680+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:01:16.681+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] c.z.c.user.DiscussionController          : 获取热门标题
+2026-05-09T17:01:23.030+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:01:23.032+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:01:25.831+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:01:25.833+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:01:25.834+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-5] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T17:01:25.835+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:01:25.838+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:01:25.838+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-6] c.z.c.user.DiscussionController          : 获取热门标题
+2026-05-09T17:03:46.792+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:03:46.794+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:03:46.795+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-8] c.z.c.user.DiscussionController          : 获取讨论详情: 128
+2026-05-09T17:03:46.841+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:03:46.841+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:03:46.841+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:03:46.844+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:03:46.843+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:03:46.844+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:03:46.847+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-10] c.z.controller.user.FavoriteController   : 检查是否已收藏: discussionId=128
+2026-05-09T17:03:46.846+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-7] cn.zuo.controller.user.ReplyController   : 获取讨论回复: ReplyPageQueryByDiscussionDto(discussionId=128, userId=null, replyLayer=null, page=1, size=10)
+2026-05-09T17:03:46.846+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-3] cn.zuo.controller.user.LikeController    : 检查是否已点赞: LikeDto(userId=1, targetType=discussion, targetId=128)
+2026-05-09T17:03:48.149+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:03:48.152+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:03:48.153+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-4] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T17:03:48.155+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:03:48.157+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:03:48.158+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-2] c.z.c.user.DiscussionController          : 获取热门标题
+2026-05-09T17:03:54.315+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:03:54.318+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:03:54.318+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-1] c.z.c.user.DiscussionController          : 获取最新讨论列表: DiscussionPageQueryDto(page=1, size=10, category=all, tags=null, keyword=null)
+2026-05-09T17:03:54.320+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : jwt校验:Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImV4cCI6MTc3ODQwMzQ1NH0.KbbJZH5SRUUddE1WQclIyOnAPatczBA1mYYqCOgjCsA
+2026-05-09T17:03:54.321+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] cn.zuo.interceptor.JwtInterceptor        : 当前登录用户id：1
+2026-05-09T17:03:54.321+08:00  INFO 40328 --- [CampusForum] [http-nio-8080-exec-9] c.z.c.user.DiscussionController          : 获取热门标题

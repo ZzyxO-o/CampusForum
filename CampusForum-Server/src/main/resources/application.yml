@@ -46,6 +46,16 @@ spring:
     # 阿里云DashScope百炼平台配置
     dashscope:
       api-key: ${spring.ai.dashscope.api-key}  # API密钥
+      embedding:
+        options:
+          model: ${spring.ai.dashscope.embedding.model}  # 嵌入模型
+      vector-store:
+        qdrant:
+          host: localhost
+          port: 6333
+          collection-name: vector_store
+          use-tls: false
+          initialize-schema: true
     # AI会话配置
     chat:
       # 对话记忆配置
