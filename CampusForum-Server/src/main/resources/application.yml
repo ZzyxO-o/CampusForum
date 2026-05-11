@@ -49,13 +49,23 @@ spring:
       embedding:
         options:
           model: ${spring.ai.dashscope.embedding.model}  # 嵌入模型
-      vector-store:
-        qdrant:
-          host: localhost
-          port: 6333
-          collection-name: vector_store
-          use-tls: false
-          initialize-schema: true
+    vector-store:
+      qdrant:
+        host: ${spring.ai.vector-store.qdrant.host}
+        port: ${spring.ai.vector-store.qdrant.port}
+        collection-name: ${spring.ai.vector-store.qdrant.collection-name}
+        use-tls: ${spring.ai.vector-store.qdrant.use-tls:false}
+        initialize-schema: ${spring.ai.vector-store.qdrant.initialize-schema:true}
+    alibaba:
+      toolcalling:
+        # 网页抓取
+        firecrawl:
+          apiKey: ${spring.ai.alibaba.toolcalling.firecrawl.api-key}
+        # 百度搜索
+        baidu:
+          search:
+            ai:
+              api-key: ${spring.ai.alibaba.toolcalling.baidu.search.ai.api-key}
     # AI会话配置
     chat:
       # 对话记忆配置

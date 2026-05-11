@@ -11,4 +11,8 @@ public interface AiChatMemoryService extends IService<AiChatMemory> {
     List<ChatSessionsVo> getUserSessions(Long userId);
 
     List<ChatMemoryVo> getUserSessionDetail(String conversationId);
+
+    Long createSession();
+
+    void deleteSession(Long userId, Long sessionId);
 }

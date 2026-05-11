@@ -38,7 +38,9 @@ public class AiChatMemoryServiceImpl extends ServiceImpl<AiChatMemoryMapper, AiC
                 .map(entry -> {
                     String conversationId = entry.getKey();
                     String sessionId = conversationId.substring(conversationId.indexOf("_") + 1);
-                    AiChatMemory first = entry.getValue().get(0);
+                    AiChatMemory first = entry.getValue().stream()
+                            .min(Comparator.comparing(AiChatMemory::getTimestamp))
+                            .orElseThrow();
                     return new ChatSessionsVo(sessionId, first.getContent(), first.getTimestamp());
                 })
                 .sorted(Comparator.comparing(ChatSessionsVo::getSessionTime).reversed())
@@ -58,5 +60,17 @@ public class AiChatMemoryServiceImpl extends ServiceImpl<AiChatMemoryMapper, AiC
             BeanUtils.copyProperties(memory, vo);
             return vo;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    public Long createSession() {
+        return System.currentTimeMillis();
+    }
+
+    @Override
+    public void deleteSession(Long userId, Long sessionId) {
+        LambdaQueryWrapper<AiChatMemory> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AiChatMemory::getConversationId, userId + "_" + sessionId);
+        aiChatMemoryMapper.delete(queryWrapper);
     }
 }

@@ -67,7 +67,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (existUser != null) {
             throw new UserRegisterException("用户名已存在");
         }
-
         // 2. 创建用户对象
         User user = new User();
         user.setUsername(userRegisterDTO.getUsername());
@@ -81,29 +80,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setBio(userRegisterDTO.getBio());
         user.setCreatedTime(LocalDateTime.now());
         user.setUpdatedTime(LocalDateTime.now());
-
         // 3. 设置默认值
         user.setRole(UserConstants.USER_DEFAULT_ROLE_USER);
         user.setStatus(UserConstants.USER_DEFAULT_STATUS_ACTIVE);
-
         // 4. 密码md5进行加密
         if (user.getPassword() != null) {
             String hashedPassword = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
             user.setPassword(hashedPassword);
         }
-
         // 5. 设置默认头像（如果没有提供）
         if (user.getAvatarUrl() == null || user.getAvatarUrl().isEmpty()) {
             user.setAvatarUrl(UserConstants.USER_DEFAULT_AVATAR_URL);
         }
-
         // 6. 保存用户
         int result = userMapper.insert(user);
         if (result <= 0) {
             throw new UserRegisterException("注册失败，请稍后重试");
         }
-
-
         // 7. 构建返回对象
         UserRegisterVO userRegisterVO = new UserRegisterVO();
         userRegisterVO.setId(user.getId());
@@ -114,7 +107,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userRegisterVO.setRole(user.getRole());
         userRegisterVO.setStatus(user.getStatus());
         userRegisterVO.setCreatedTime(user.getCreatedTime());
-
         log.info("用户注册成功，用户ID：{}，用户名：{}", user.getId(), user.getUsername());
         return userRegisterVO;
     }
@@ -339,7 +331,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         User updateUser = new User();
         updateUser.setId(userId);
-        updateUser.setRole("admin".equals(status) ? "admin" : "user");
+        updateUser.setStatus(status);
+        updateUser.setUpdatedTime(LocalDateTime.now());
         userMapper.updateById(updateUser);
     }
 
@@ -429,15 +422,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userStatsVo.setTotalUsers(userMapper.selectCount(totalWrapper));
         //统计活跃用户数
         QueryWrapper<User> activeWrapper = new QueryWrapper<>();
-        activeWrapper.eq("status", "active");
+        activeWrapper.eq("status", "ACTIVE");
         userStatsVo.setTotalActiveUsers(userMapper.selectCount(activeWrapper));
         //统计不活跃用户数
         QueryWrapper<User> inactiveWrapper = new QueryWrapper<>();
-        inactiveWrapper.eq("status", "inactive");
+        inactiveWrapper.eq("status", "INACTIVE");
         userStatsVo.setTotalInactiveUsers(userMapper.selectCount(inactiveWrapper));
         //统计被禁用用户数
         QueryWrapper<User> bannedWrapper = new QueryWrapper<>();
-        bannedWrapper.eq("status", "banned");
+        bannedWrapper.eq("status", "BANNED");
         userStatsVo.setTotalBannedUsers(userMapper.selectCount(bannedWrapper));
         return userStatsVo;
     }

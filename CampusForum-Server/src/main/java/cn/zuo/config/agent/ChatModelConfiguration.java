@@ -14,18 +14,6 @@ public class ChatModelConfiguration {
     @Resource
     private DashScopeApi dashScopeApi;
 
-    @Bean("SimpleDashScopeChatModel")
-    public ChatModel getSimpleDashScopeChatModel() {
-        return DashScopeChatModel.builder()
-                .dashScopeApi(dashScopeApi)
-                .defaultOptions(DashScopeChatOptions.builder()
-                        .withModel(DashScopeChatModel.DEFAULT_MODEL_NAME)
-                        .withTemperature(0.5)
-                        .withMaxToken(1000)
-                        .build())
-                .build();
-    }
-
     @Bean("MaxDashScopeChatModel")
     public ChatModel GetMaxDashScopeChatModel() {
         return DashScopeChatModel.builder()
@@ -37,4 +25,5 @@ public class ChatModelConfiguration {
                         .build())
                 .build();
     }
+
 }

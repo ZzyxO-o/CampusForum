@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -43,36 +44,30 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
      * @return
      */
     @Override
+    @Tool(description = "分页查询讨论列表")
     public PageResult pageQueryDiscussions(DiscussionPageQueryDto discussionPageQueryDto){
         // 创建分页对象
         Page<Discussion> pageInfo = new Page<>(discussionPageQueryDto.getPage(), discussionPageQueryDto.getSize());
-
         // 创建查询条件构造器
         QueryWrapper<Discussion> wrapper = new QueryWrapper<>();
-
         // 分类筛选
         if (discussionPageQueryDto.getCategory() != null && !"all".equals(discussionPageQueryDto.getCategory())) {
             wrapper.eq("category", discussionPageQueryDto.getCategory());
         }
-
         // 标签筛选
         if (discussionPageQueryDto.getTags() != null && !discussionPageQueryDto.getTags().isEmpty()) {
             wrapper.like("tags", discussionPageQueryDto.getTags());
         }
-
         // 关键词搜索（标题或内容）
         if (discussionPageQueryDto.getKeyword() != null && !discussionPageQueryDto.getKeyword().isEmpty()) {
             wrapper.and(w -> w.like("title", discussionPageQueryDto.getKeyword())
                     .or()
                     .like("content", discussionPageQueryDto.getKeyword()));
         }
-
         // 只查询活跃状态的讨论
         wrapper.eq("status", "active");
-
         // 按创建时间倒序排列
         wrapper.orderByDesc("created_time");
-
         // 执行分页查询
         Page<Discussion> discussionPage = discussionMapper.selectPage(pageInfo, wrapper);
         return new PageResult(discussionPage.getTotal(), discussionPage.getRecords());
@@ -84,6 +79,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
      * @return
      */
     @Override
+    @Tool(description = "根据讨论ID查询讨论详情，包含回复列表")
     public DiscussionDetailVo getDiscussionDetailById(Long discussionId){
         Discussion discussion = discussionMapper.selectById(discussionId);
         if (discussion == null) {
@@ -124,6 +120,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     }
 
     @Override
+    @Tool(description = "根据用户ID查询该用户发布的所有讨论帖")
     public List<Discussion> getDiscussionsByUserId(Long userId) {
         QueryWrapper<Discussion> wrapper = new QueryWrapper<>();
         wrapper.eq("user_id", userId);
@@ -207,7 +204,6 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
         wrapper.eq("user_id", discussionPageQueryByUserDto.getUserId())
                 .ne("status", "deleted")
                 .orderByDesc("created_time");
-
         Page<Discussion> discussionPage = discussionMapper.selectPage(pageInfo, wrapper);
         return new PageResult(discussionPage.getTotal(), discussionPage.getRecords());
     }
@@ -233,6 +229,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
      * @return
      */
     @Override
+    @Tool(description = "获取热门讨论帖，按浏览量和回复数加权排序，支持分类、标签和关键词筛选")
     public PageResult getHotDiscussions(DiscussionPageQueryDto discussionPageQueryDto) {
         Page<Discussion> pageInfo = new Page<>(discussionPageQueryDto.getPage(), discussionPageQueryDto.getSize());
         QueryWrapper<Discussion> wrapper = new QueryWrapper<>();
@@ -265,6 +262,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
      * @return
      */
     @Override
+    @Tool(description = "获取当前热门讨论标题列表（最多10条），按热度排序")
     public PageResult<HotTitleVo> getHotTitles() {
         Page<Discussion> pageInfo = new Page(1, 10);
         QueryWrapper<Discussion> queryWrapper = new QueryWrapper<>();

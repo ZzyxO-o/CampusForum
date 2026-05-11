@@ -36,7 +36,7 @@
 		<java.version>17</java.version>
 		<mybatis-plus>3.5.5</mybatis-plus>
 		<fastjson>1.2.76</fastjson>
-		<druid>1.2.1</druid>
+		<druid>1.2.25</druid>
 		<lombok>1.18.30</lombok>
 		<!-- JWT版本统一管理 -->
 		<jjwt.version>0.11.5</jjwt.version>
@@ -45,9 +45,9 @@
 		<!-- Spring AI Alibaba版本 -->
 		<spring-ai-alibaba.version>1.1.2.0</spring-ai-alibaba.version>
 		<!-- Spring AI版本 -->
-		<spring-ai.version>1.0.0-M8</spring-ai.version>
+		<spring-ai.version>1.1.0</spring-ai.version>
 		<!-- Knife4j版本 -->
-		<knife4j.version>3.0.2</knife4j.version>
+		<knife4j.version>4.3.0</knife4j.version>
 		<!-- 编译和编码设置 -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -78,7 +78,7 @@
 			<!-- Druid数据库连接池 -->
 			<dependency>
 				<groupId>com.alibaba</groupId>
-				<artifactId>druid-spring-boot-starter</artifactId>
+				<artifactId>druid-spring-boot-3-starter</artifactId>
 				<version>${druid}</version>
 			</dependency>
 			<!-- JWT认证 -->
@@ -99,8 +99,8 @@
 			</dependency>
 			<!-- MySQL驱动 -->
 			<dependency>
-				<groupId>mysql</groupId>
-				<artifactId>mysql-connector-java</artifactId>
+				<groupId>com.mysql</groupId>
+				<artifactId>mysql-connector-j</artifactId>
 				<version>${mysql.version}</version>
 			</dependency>
 			<!-- Spring AI Alibaba -->
@@ -130,22 +130,40 @@
 				<artifactId>spring-ai-alibaba-starter-document-reader-poi</artifactId>
 				<version>${spring-ai-alibaba.version}</version>
 			</dependency>
+			<!-- 火虫工具调用依赖 -->
+			<dependency>
+				<groupId>com.alibaba.cloud.ai</groupId>
+				<artifactId>spring-ai-alibaba-starter-tool-calling-firecrawl</artifactId>
+				<version>${spring-ai-alibaba.version}</version>
+			</dependency>
+			<!-- 百度搜索工具调用依赖 -->
+			<dependency>
+				<groupId>com.alibaba.cloud.ai</groupId>
+				<artifactId>spring-ai-alibaba-starter-tool-calling-baidusearch</artifactId>
+				<version>${spring-ai-alibaba.version}</version>
+			</dependency>
 			<!-- springAI向量数据库Qdrant -->
 			<dependency>
 				<groupId>org.springframework.ai</groupId>
 				<artifactId>spring-ai-starter-vector-store-qdrant</artifactId>
 				<version>${spring-ai.version}</version>
 			</dependency>
-			<!-- poi文档读取依赖 -->
+			<!-- springAI RAG -->
 			<dependency>
-				<groupId>com.alibaba.cloud.ai</groupId>
-				<artifactId>spring-ai-alibaba-starter-document-reader-poi</artifactId>
-				<version>${spring-ai-alibaba.version}</version>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-advisors-vector-store</artifactId>
+				<version>${spring-ai.version}</version>
+			</dependency>
+			<!-- springAI RAG -->
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-rag</artifactId>
+				<version>${spring-ai.version}</version>
 			</dependency>
 			<!-- Knife4j API文档 -->
 			<dependency>
 				<groupId>com.github.xiaoymin</groupId>
-				<artifactId>knife4j-spring-boot-starter</artifactId>
+				<artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
 				<version>${knife4j.version}</version>
 			</dependency>
 		</dependencies>

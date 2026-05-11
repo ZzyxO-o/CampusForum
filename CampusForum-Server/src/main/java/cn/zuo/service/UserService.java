@@ -89,6 +89,10 @@ public interface UserService extends IService<User> {
      */
     UserStatsVo getUserStatsByUserId(Long userId);
 
+    /**
+     * 获取系统总览数据
+     * @return
+     */
     UserOverviewDataVo getSystemOverview();
 
     /**

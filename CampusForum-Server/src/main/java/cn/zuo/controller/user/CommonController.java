@@ -34,7 +34,7 @@ public class CommonController {
         summary = "文件上传",
         description = "上传文件到阿里云OSS存储，支持图片、文档等各种文件类型。文件名会自动生成UUID避免重复。"
     )
-    public Result fileUpload(@Parameter(description = "上传的文件，支持图片、文档等各种类型", required = true, example = "avatar.jpg") MultipartFile file) throws Exception {
+    public Result<String> fileUpload(@Parameter(description = "上传的文件，支持图片、文档等各种类型", required = true, example = "avatar.jpg") MultipartFile file) throws Exception {
         //完成文件上传
         //获取原始文件名
         String originalFilename = file.getOriginalFilename();
