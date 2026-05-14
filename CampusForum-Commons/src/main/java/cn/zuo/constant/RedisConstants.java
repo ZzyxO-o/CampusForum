@@ -23,4 +23,5 @@ public class RedisConstants {
     public static final String NEW_USERS_KEY = "data:new:users";
     public static final String NEW_DISCUSSIONS_KEY = "data:new:discussions";
     public static final String NEW_REPLIES_KEY = "data:new:replies";
+    public static final String CATEGORY_STATS_KEY = "data:stats:categories";
 }

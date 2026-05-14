@@ -34,7 +34,10 @@ public class AdminUserController {
     @Operation(summary = "获取用户详情", description = "根据用户ID获取详细信息")
     public Result<User> getUserDetail(@Parameter(description = "用户ID") @PathVariable Long userId) {
         User user = userService.getById(userId);
-        user.setPassword(null); // 不返回密码
+        if (user == null) {
+            return Result.error("用户不存在");
+        }
+        user.setPassword(null);
         return Result.success(user);
     }
 
@@ -49,21 +52,21 @@ public class AdminUserController {
     @PostMapping("/{userId}/deactivate")
     @Operation(summary = "停用用户", description = "管理员停用用户账号")
     public Result<String> deactivateUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
-        userService.updateUserStatus(userId, "inactive");
+        userService.updateUserStatus(userId, "INACTIVE");
         return Result.success("用户已停用");
     }
 
     @PostMapping("/{userId}/activate")
     @Operation(summary = "激活用户", description = "管理员激活用户账号")
     public Result<String> activateUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
-        userService.updateUserStatus(userId, "active");
+        userService.updateUserStatus(userId, "ACTIVE");
         return Result.success("用户已激活");
     }
 
     @PostMapping("/{userId}/ban")
     @Operation(summary = "封禁用户", description = "管理员封禁用户账号")
     public Result<String> banUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
-        userService.updateUserStatus(userId, "banned");
+        userService.updateUserStatus(userId, "BANNED");
         return Result.success("用户已封禁");
     }
 
@@ -86,7 +89,7 @@ public class AdminUserController {
     @Operation(summary = "提升用户权限", description = "将普通用户提升为管理员")
     public Result<String> promoteUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
         log.info("提升用户权限: {}", userId);
-        userService.updateUserStatus(userId, "admin");
+        userService.updateUserRole(userId, "admin");
         return Result.success("用户权限提升成功");
     }
 

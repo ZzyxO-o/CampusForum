@@ -45,7 +45,9 @@ public class UserController {
     public Result<User> getUserInfo(@PathVariable Long userId) {
         log.info("根据id获取用户信息：{}", userId);
         User user = userService.getById(userId);
-        // 不返回密码字段
+        if (user == null) {
+            return Result.error("用户不存在");
+        }
         user.setPassword(null);
         return Result.success(user);
     }

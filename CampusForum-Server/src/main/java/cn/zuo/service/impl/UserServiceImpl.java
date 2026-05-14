@@ -5,6 +5,7 @@ import cn.zuo.constant.RedisConstants;
 import cn.zuo.constant.businessConstant.UserConstants;
 import cn.zuo.dto.userdto.*;
 import cn.zuo.entity.*;
+import cn.zuo.exception.BusinessException;
 import cn.zuo.exception.userException.*;
 import cn.zuo.mapper.*;
 import cn.zuo.properties.JwtProperties;
@@ -76,8 +77,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setEmail(userRegisterDTO.getEmail());
         if (userRegisterDTO.getBio() == null || userRegisterDTO.getBio().isEmpty()) {
             user.setBio(UserConstants.USER_DEFAULT_BIO);
+        } else {
+            user.setBio(userRegisterDTO.getBio());
         }
-        user.setBio(userRegisterDTO.getBio());
         user.setCreatedTime(LocalDateTime.now());
         user.setUpdatedTime(LocalDateTime.now());
         // 3. 设置默认值
@@ -186,35 +188,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public UserOverviewDataVo getSystemOverview() {
         UserOverviewDataVo userOverviewDataVo = new UserOverviewDataVo();
-        //查看总用户数
-        Long totalUsers = Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.TOTAL_USERS_KEY).toString());
-        if (totalUsers == null) {
-            totalUsers = userMapper.selectCount(new QueryWrapper<User>());
-            // 缓存总用户数,一小时过期
-            redisTemplate.opsForValue().set(RedisConstants.TOTAL_USERS_KEY, totalUsers.toString(), RedisConstants.CACHE_EXPIRE, TimeUnit.SECONDS);
-        }
+        Long totalUsers = getCachedCount(RedisConstants.TOTAL_USERS_KEY, () -> userMapper.selectCount(new QueryWrapper<User>()));
+        Long totalDiscussions = getCachedCount(RedisConstants.TOTAL_DISCUSSIONS_KEY, () -> discussionMapper.selectCount(new QueryWrapper<Discussion>()));
         userOverviewDataVo.setTotalUsers(totalUsers);
-        //查看总帖子数
-        Long totalDiscussions = Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.TOTAL_DISCUSSIONS_KEY).toString());
-        if (totalDiscussions == null) {
-            totalDiscussions = discussionMapper.selectCount(new QueryWrapper<Discussion>());
-            // 缓存总帖子数,一小时过期
-            redisTemplate.opsForValue().set(RedisConstants.TOTAL_DISCUSSIONS_KEY, totalDiscussions.toString(), RedisConstants.CACHE_EXPIRE, TimeUnit.SECONDS);
-        }
         userOverviewDataVo.setTotalDiscussions(totalDiscussions);
-        userOverviewDataVo.setNewUsers(Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.NEW_USERS_KEY).toString()));
-        userOverviewDataVo.setNewDiscussions(Long.parseLong(redisTemplate.opsForValue().get(RedisConstants.NEW_DISCUSSIONS_KEY).toString()));
-        // 包括：总用户数、总帖子数、今日新增用户数、新增帖子数、新增回复数等
         return userOverviewDataVo;
     }
 
-    /**
-     *
-     * @param days
-     * @return
-     */
+    private Long getCachedCount(String key, java.util.function.Supplier<Long> countSupplier) {
+        String countStr = redisTemplate.opsForValue().get(key);
+        if (countStr != null) {
+            return Long.parseLong(countStr);
+        }
+        Long count = countSupplier.get();
+        redisTemplate.opsForValue().set(key, count.toString(), RedisConstants.CACHE_EXPIRE, TimeUnit.SECONDS);
+        return count;
+    }
+
     @Override
-    public List<DailyStatVo> getDailyStats(Integer days) {
+    public cn.zuo.vo.admin.NewStatsVo getNewStats(Integer days) {
+        LocalDateTime startTime = LocalDate.now().minusDays(days - 1).atStartOfDay();
+        LocalDateTime endTime = LocalDate.now().atTime(LocalTime.MAX);
+
+        cn.zuo.vo.admin.NewStatsVo vo = new cn.zuo.vo.admin.NewStatsVo();
+        vo.setNewUsers(userMapper.selectCount(new LambdaQueryWrapper<User>()
+                .ge(User::getCreatedTime, startTime)
+                .le(User::getCreatedTime, endTime)));
+        vo.setNewDiscussions(discussionMapper.selectCount(new LambdaQueryWrapper<Discussion>()
+                .ge(Discussion::getCreatedTime, startTime)
+                .le(Discussion::getCreatedTime, endTime)));
+        vo.setNewReplies(replyMapper.selectCount(new LambdaQueryWrapper<Reply>()
+                .ge(Reply::getCreatedTime, startTime)
+                .le(Reply::getCreatedTime, endTime)));
+        return vo;
+    }
+
+    @Override
+    public List<DailyStatVo> getTrend(Integer days) {
         List<DailyStatVo> stats = new ArrayList<>();
         LocalDate today = LocalDate.now();
         for (int i = days - 1; i >= 0; i--) {
@@ -238,6 +248,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public User findByUsername(String username) {
         User userByUsername = getUserByUsername(username);
+        if (userByUsername == null) {
+            throw new BusinessException("用户不存在");
+        }
         // 不返回密码字段
         userByUsername.setPassword(null);
         return userByUsername;
@@ -253,7 +266,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //要修改的用户id
         Long userId = userUpdateDTO.getUserId();
         //当前用户信息
-        User user = userMapper.selectById(userId);
+        User user = userMapper.selectById(ThreadLocalUtil.getCurrentId());
         //判断要更新的用户是否是当前用户
         if (!userId.equals(ThreadLocalUtil.getCurrentId())) {
             //如果要更新其他用户的个人信息，判断是否是管理员工
@@ -336,6 +349,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userMapper.updateById(updateUser);
     }
 
+    @Override
+    public void updateUserRole(Long userId, String role) {
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            throw new UserUpdateException("用户不存在");
+        }
+        User updateUser = new User();
+        updateUser.setId(userId);
+        updateUser.setRole(role);
+        updateUser.setUpdatedTime(LocalDateTime.now());
+        userMapper.updateById(updateUser);
+    }
+
     /**
      * 用户登出
      * @param token 用户token
@@ -350,9 +376,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Claims claims = JwtUtil.parseJWT(jwtProperties.getSecretKey(), token);
         Long userId = Long.valueOf(claims.get(JwtClaimsConstant.USER_ID).toString());
         User user = userMapper.selectById(userId);
-        if (user.getUsername() == null) {
-            log.error("token解析用户名失败" + token);
-            throw new UserLogoutException("登出失败");
+        if (user == null) {
+            log.error("登出时用户不存在，userId：{}", userId);
+            throw new UserLogoutException("用户不存在");
         }
 
         // 2. 从Redis中删除token

@@ -5,6 +5,7 @@ import cn.zuo.service.DiscussionService;
 import cn.zuo.service.UserService;
 import cn.zuo.vo.admin.CategoryStatVo;
 import cn.zuo.vo.admin.DailyStatVo;
+import cn.zuo.vo.admin.NewStatsVo;
 import cn.zuo.vo.uservo.UserOverviewDataVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -32,16 +33,16 @@ public class AdminDataController {
 
 
     @GetMapping("/overview")
-    @Operation(summary = "系统总览", description = "获取系统核心数据总览")
+    @Operation(summary = "系统总览", description = "获取系统核心数据总览（总用户数、总帖子数）")
     public Result<UserOverviewDataVo> getSystemOverview() {
         return Result.success(userService.getSystemOverview());
     }
 
-    @GetMapping("/daily")
-    @Operation(summary = "每日统计", description = "获取每日新增用户、帖子、回复等统计数据")
-    public Result<List<DailyStatVo>> getDailyStats(
+    @GetMapping("/new")
+    @Operation(summary = "新增数据统计", description = "获取最近N天新增用户、帖子、回复的汇总统计")
+    public Result<NewStatsVo> getNewStats(
             @Parameter(description = "统计天数") @RequestParam(defaultValue = "7") Integer days) {
-        return Result.success(userService.getDailyStats(days));
+        return Result.success(userService.getNewStats(days));
     }
 
     @GetMapping("/categories")
@@ -49,5 +50,12 @@ public class AdminDataController {
     public Result<List<CategoryStatVo>> getCategoryStats() {
         List<CategoryStatVo> stats = discussionService.getCategoryStats();
         return Result.success(stats);
+    }
+
+    @GetMapping("/trend")
+    @Operation(summary = "每日趋势", description = "获取最近N天每天的新增用户、帖子、回复明细，用于折线图")
+    public Result<List<DailyStatVo>> getTrend(
+            @Parameter(description = "统计天数") @RequestParam(defaultValue = "7") Integer days) {
+        return Result.success(userService.getTrend(days));
     }
 }

@@ -46,6 +46,11 @@ public interface UserService extends IService<User> {
      */
     void updateUserStatus(Long userId, String status);
 
+    /**
+     * 更新用户角色
+     */
+    void updateUserRole(Long userId, String role);
+
 
     /**
      * 用户注册（带参数验证）
@@ -96,9 +101,16 @@ public interface UserService extends IService<User> {
     UserOverviewDataVo getSystemOverview();
 
     /**
-     * 获取最近N天的用户注册统计
+     * 获取最近N天的新增汇总统计
      * @param days
      * @return
      */
-    List<DailyStatVo> getDailyStats(Integer days);
+    cn.zuo.vo.admin.NewStatsVo getNewStats(Integer days);
+
+    /**
+     * 获取最近N天的每日趋势明细（折线图用）
+     * @param days
+     * @return
+     */
+    List<DailyStatVo> getTrend(Integer days);
 }
