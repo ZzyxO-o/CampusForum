@@ -34,8 +34,8 @@ public class VectorServiceImpl implements VectorService {
         List<Document> documents = reader.get();
         // 按 character 分块
         List<Document> chunks = new RecursiveCharacterTextSplitter().apply(documents);
-        // 向量化并存入 Qdrant，每批最多 25 个文本块
-        int batchSize = 25;
+        // 向量化并存入 Qdrant，每批最多 10 个文本块
+        int batchSize = 10;
         for (int i = 0; i < chunks.size(); i += batchSize) {
             List<Document> batch = chunks.subList(i, Math.min(i + batchSize, chunks.size()));
             vectorStore.add(batch);

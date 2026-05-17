@@ -40,7 +40,7 @@ CREATE TABLE `discussions`  (
   `title` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '讨论标题，不能为空',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '讨论内容，不能为空',
   `user_id` bigint NOT NULL COMMENT '发布者ID，外键关联users表',
-  `category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '讨论分类：question-疑问, discussion-讨论, share-分享, announcement-公告',
+  `category` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '讨论分类：学习交流、校园生活、求职就业、社团活动',
   `tags` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '标签，逗号分隔',
   `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'active' COMMENT '讨论状态：active-活跃, closed-隐藏, deleted-已删除',
   `view_count` int NOT NULL DEFAULT 0 COMMENT '浏览量',

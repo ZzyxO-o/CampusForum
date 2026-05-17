@@ -28,7 +28,7 @@ public class Discussion {
     private Long userId; // 发布者ID，外键关联users表
 
     @TableField("category")
-    private String category; // 讨论分类：learnAndCommunicate-学习交流, campusLife-校园生活, JobHuntingAndEmployment-求职就业, ClubActivities-社团活动
+    private String category; // 讨论分类：学习交流、校园生活、求职就业、社团活动
 
     @TableField("tags")
     private String tags; // 标签，逗号分隔
