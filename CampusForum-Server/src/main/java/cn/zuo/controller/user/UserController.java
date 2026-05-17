@@ -15,6 +15,8 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/users")
@@ -112,6 +114,15 @@ public class UserController {
     @Operation(summary = "系统总览", description = "获取系统总览数据")
     public Result<UserOverviewDataVo> getSystemOverview() {
         return Result.success(userService.getSystemOverview());
+    }
+
+    @GetMapping("/active")
+    @Operation(summary = "获取活跃用户", description = "获取活跃用户排行榜，默认返回前10名")
+    public Result<List<ActiveUserVo>> getActiveUsers(
+            @Parameter(description = "返回数量限制") @RequestParam(required = false) Integer limit) {
+        log.info("获取活跃用户列表，limit：{}", limit);
+        List<ActiveUserVo> activeUsers = userService.getActiveUsers(limit);
+        return Result.success(activeUsers);
     }
 
 }

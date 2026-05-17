@@ -113,4 +113,11 @@ public interface UserService extends IService<User> {
      * @return
      */
     List<DailyStatVo> getTrend(Integer days);
+
+    /**
+     * 获取活跃用户列表
+     * @param limit 返回数量限制，默认10
+     * @return 活跃用户列表
+     */
+    List<ActiveUserVo> getActiveUsers(Integer limit);
 }
