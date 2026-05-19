@@ -4,4 +4,32 @@
     <select id="selectByEmail" resultType="cn.zuo.entity.User">
         SELECT * FROM users WHERE email = #{email}
     </select>
+
+    <select id="selectActiveUsers" resultType="cn.zuo.vo.uservo.ActiveUserVo">
+        SELECT
+            u.id,
+            u.username,
+            u.nickname,
+            u.avatar_url,
+            u.bio,
+            u.college,
+            COALESCE(dc.post_count, 0) AS post_count,
+            COALESCE(rc.reply_count, 0) AS reply_count,
+            COALESCE(dc.disc_likes, 0) + COALESCE(rc.reply_likes, 0) AS received_like_count,
+            COALESCE(dc.post_count, 0) * 3 + COALESCE(rc.reply_count, 0) * 2
+              + COALESCE(dc.disc_likes, 0) + COALESCE(rc.reply_likes, 0) AS activity_score
+        FROM users u
+        LEFT JOIN (
+            SELECT user_id, COUNT(*) AS post_count, SUM(COALESCE(like_count, 0)) AS disc_likes
+            FROM discussions WHERE status = 'active' GROUP BY user_id
+        ) dc ON u.id = dc.user_id
+        LEFT JOIN (
+            SELECT user_id, COUNT(*) AS reply_count, SUM(COALESCE(like_count, 0)) AS reply_likes
+            FROM replies WHERE status = 'active' GROUP BY user_id
+        ) rc ON u.id = rc.user_id
+        WHERE u.status = 'ACTIVE'
+        HAVING activity_score > 0
+        ORDER BY activity_score DESC
+        LIMIT #{limit}
+    </select>
 </mapper>

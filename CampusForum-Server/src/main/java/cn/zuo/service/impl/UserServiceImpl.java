@@ -437,81 +437,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * 获取活跃用户列表
+     * 获取活跃用户列表（单条SQL聚合，避免N+1查询）
      * 活跃度 = 发帖数×3 + 回帖数×2 + 获得点赞数×1
-     * @param limit 返回数量限制
-     * @return 活跃用户列表
      */
     @Override
     public List<ActiveUserVo> getActiveUsers(Integer limit) {
         if (limit == null || limit <= 0) {
             limit = 10;
         }
-
-        // 1. 查询所有正常状态的用户
-        QueryWrapper<User> userWrapper = new QueryWrapper<>();
-        userWrapper.eq("status", "ACTIVE");
-        userWrapper.select("id", "username", "nickname", "avatar_url", "bio", "college");
-        List<User> users = userMapper.selectList(userWrapper);
-
-        // 2. 统计每个用户的活跃度指标
-        List<ActiveUserVo> activeUsers = new ArrayList<>();
-        for (User user : users) {
-            Long userId = user.getId();
-
-            // 统计发帖数
-            QueryWrapper<Discussion> discWrapper = new QueryWrapper<>();
-            discWrapper.eq("user_id", userId).eq("status", "active");
-            Long postCount = discussionMapper.selectCount(discWrapper);
-
-            // 统计回帖数
-            QueryWrapper<Reply> replyWrapper = new QueryWrapper<>();
-            replyWrapper.eq("user_id", userId).eq("status", "active");
-            Long replyCount = replyMapper.selectCount(replyWrapper);
-
-            // 统计收到的点赞数（帖子收到的点赞）
-            QueryWrapper<Discussion> discLikeWrapper = new QueryWrapper<>();
-            discLikeWrapper.eq("user_id", userId).eq("status", "active");
-            discLikeWrapper.select("like_count");
-            List<Discussion> discussions = discussionMapper.selectList(discLikeWrapper);
-            Long discLikeCount = discussions.stream()
-                    .mapToLong(d -> d.getLikeCount() != null ? d.getLikeCount() : 0)
-                    .sum();
-
-            // 统计回复收到的点赞数
-            QueryWrapper<Reply> replyLikeWrapper = new QueryWrapper<>();
-            replyLikeWrapper.eq("user_id", userId).eq("status", "active");
-            replyLikeWrapper.select("like_count");
-            List<Reply> replies = replyMapper.selectList(replyLikeWrapper);
-            Long replyLikeCount = replies.stream()
-                    .mapToLong(r -> r.getLikeCount() != null ? r.getLikeCount() : 0)
-                    .sum();
-
-            Long receivedLikeCount = discLikeCount + replyLikeCount;
-
-            // 计算活跃度分数：发帖×3 + 回帖×2 + 收到点赞×1
-            Long activityScore = postCount * 3 + replyCount * 2 + receivedLikeCount;
-
-            // 只要有任何活跃行为的用户才加入列表
-            if (activityScore > 0) {
-                ActiveUserVo vo = new ActiveUserVo();
-                vo.setId(user.getId());
-                vo.setUsername(user.getUsername());
-                vo.setNickname(user.getNickname());
-                vo.setAvatarUrl(user.getAvatarUrl());
-                vo.setBio(user.getBio());
-                vo.setCollege(user.getCollege());
-                vo.setPostCount(postCount);
-                vo.setReplyCount(replyCount);
-                vo.setReceivedLikeCount(receivedLikeCount);
-                vo.setActivityScore(activityScore);
-                activeUsers.add(vo);
-            }
-        }
-
-        // 3. 按活跃度分数降序排序，取前N名
-        activeUsers.sort((a, b) -> Long.compare(b.getActivityScore(), a.getActivityScore()));
-        return activeUsers.subList(0, Math.min(limit, activeUsers.size()));
+        return userMapper.selectActiveUsers(limit);
     }
 
     /**
