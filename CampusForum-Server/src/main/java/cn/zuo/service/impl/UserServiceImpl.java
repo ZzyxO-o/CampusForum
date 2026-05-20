@@ -6,7 +6,6 @@ import cn.zuo.constant.businessConstant.UserConstants;
 import cn.zuo.dto.userdto.*;
 import cn.zuo.entity.*;
 import cn.zuo.exception.BusinessException;
-import cn.zuo.exception.userException.*;
 import cn.zuo.mapper.*;
 import cn.zuo.properties.JwtProperties;
 import cn.zuo.result.PageResult;
@@ -67,7 +66,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 1. 检查用户名是否已存在
         User existUser = getUserByUsername(userRegisterDTO.getUsername());
         if (existUser != null) {
-            throw new UserRegisterException("用户名已存在");
+            throw new BusinessException("用户名已存在");
         }
         // 2. 创建用户对象
         User user = new User();
@@ -98,7 +97,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 6. 保存用户
         int result = userMapper.insert(user);
         if (result <= 0) {
-            throw new UserRegisterException("注册失败，请稍后重试");
+            throw new BusinessException("注册失败，请稍后重试");
         }
         // 7. 构建返回对象
         UserRegisterVO userRegisterVO = new UserRegisterVO();
@@ -119,16 +118,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 1. 查找用户
         User user = getUserByUsername(userLoginDTO.getUsername());
         if (user == null) {
-            throw new UserLoginException("用户名或密码错误");
+            throw new BusinessException("用户名或密码错误");
         }
         // 2. 检查用户状态
         if (!"ACTIVE".equals(user.getStatus())) {
-            throw new UserLoginException("账号已被禁用");
+            throw new BusinessException("账号已被禁用");
         }
         // 3. 验证密码
         String hashedPassword = DigestUtils.md5DigestAsHex(userLoginDTO.getPassword().getBytes());
         if (!user.getPassword().equals(hashedPassword)) {
-            throw new UserLoginException("用户名或密码错误");
+            throw new BusinessException("用户名或密码错误");
         }
         // 4. 生成JWT token 携带用户ID
         HashMap<String, Object> claims = new HashMap<>();
@@ -210,7 +209,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public NewStatsVo getNewStats(Integer days) {
         LocalDateTime startTime = LocalDate.now().minusDays(days - 1).atStartOfDay();
         LocalDateTime endTime = LocalDate.now().atTime(LocalTime.MAX);
-
         NewStatsVo vo = new NewStatsVo();
         vo.setNewUsers(userMapper.selectCount(new LambdaQueryWrapper<User>()
                 .ge(User::getCreatedTime, startTime)
@@ -272,7 +270,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!userId.equals(ThreadLocalUtil.getCurrentId())) {
             //如果要更新其他用户的个人信息，判断是否是管理员工
             if (!"admin".equals(user.getRole())) {
-                throw new UserUpdateException("您没有权限更新其他用户的个人信息");
+                throw new BusinessException("您没有权限更新其他用户的个人信息");
             }
         }
         // 只更新非敏感字段
@@ -293,17 +291,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         //判断要修改密码的用户是否是当前用户
         if (!userId.equals(ThreadLocalUtil.getCurrentId())) {
-            throw new UserChangePasswordException("您没有权限修改其他用户的密码");
+            throw new BusinessException("您没有权限修改其他用户的密码");
         }
         // 获取用户当前信息
         User user = userMapper.selectById(userId);
         if (user == null) {
-            throw new UserChangePasswordException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
         // 验证旧密码
         String hashedOldPassword = DigestUtils.md5DigestAsHex(userChangePasswordDTO.getOldPassword().getBytes());
         if (!user.getPassword().equals(hashedOldPassword)) {
-            throw new UserChangePasswordException("旧密码错误");
+            throw new BusinessException("旧密码错误");
         }
         // 更新新密码
         User updateUser = new User();
@@ -321,14 +319,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             //判断当前用户是不是管理员工
             User user = userMapper.selectById(ThreadLocalUtil.getCurrentId());
             if (!"admin".equals(user.getRole())) {
-                throw new UserDeleteException("您没有权限删除其他用户的账号");
+                throw new BusinessException("您没有权限删除其他用户的账号");
             }
         }
 
         // 软删除：将用户状态改为inactive
         User user = userMapper.selectById(userId);
         if (user == null) {
-            throw new UserDeleteException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
         User updateUser = new User();
         updateUser.setId(userId);
@@ -341,7 +339,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updateUserStatus(Long userId, String status) {
         User user = userMapper.selectById(userId);
         if (user == null) {
-            throw new UserUpdateException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
         User updateUser = new User();
         updateUser.setId(userId);
@@ -354,7 +352,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public void updateUserRole(Long userId, String role) {
         User user = userMapper.selectById(userId);
         if (user == null) {
-            throw new UserUpdateException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
         User updateUser = new User();
         updateUser.setId(userId);
@@ -379,7 +377,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = userMapper.selectById(userId);
         if (user == null) {
             log.error("登出时用户不存在，userId：{}", userId);
-            throw new UserLogoutException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
 
         // 2. 从Redis中删除token

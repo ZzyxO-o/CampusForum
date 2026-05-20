@@ -7,7 +7,7 @@ import cn.zuo.entity.Discussion;
 import cn.zuo.entity.Notification;
 import cn.zuo.entity.Reply;
 import cn.zuo.entity.User;
-import cn.zuo.exception.replyException.ReplyQueryException;
+import cn.zuo.exception.BusinessException;
 import cn.zuo.mapper.DiscussionMapper;
 import cn.zuo.mapper.NotificationMapper;
 import cn.zuo.mapper.ReplyMapper;
@@ -68,10 +68,10 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
         // 验证讨论是否存在且可回复
         Discussion discussion = discussionMapper.selectById(replyDto.getDiscussionId());
         if (discussion == null) {
-            throw new ReplyQueryException("讨论不存在");
+            throw new BusinessException("讨论不存在");
         }
         if ("closed".equals(discussion.getStatus())) {
-            throw new ReplyQueryException("讨论已关闭，无法回复");
+            throw new BusinessException("讨论已关闭，无法回复");
         }
         // 创建回复对象
         Reply reply = new Reply();
@@ -81,7 +81,7 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
             // 如果是子回复，验证父回复是否存在
             Reply parentReply = replyMapper.selectById(replyDto.getParentReplyId());
             if (parentReply == null) {
-                throw new ReplyQueryException("引用的回复不存在");
+                throw new BusinessException("引用的回复不存在");
             }
             // 子回复的层级 = 父回复的层级 + 1
             reply.setReplyLayer(parentReply.getReplyLayer() + 1);
@@ -126,7 +126,7 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
     public void deleteReply(Long replyId) {
         Reply reply = replyMapper.selectById(replyId);
         if (reply == null) {
-            throw new ReplyQueryException("回复不存在");
+            throw new BusinessException("回复不存在");
         }
 
         // 软删除：修改状态为deleted
@@ -174,7 +174,7 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
     public void updateReply(ReplyUpdateDto replyUpdateDto) {
         Reply reply = replyMapper.selectById(replyUpdateDto.getId());
         if (reply == null) {
-            throw new ReplyQueryException("回复不存在");
+            throw new BusinessException("回复不存在");
         }
 
         // 只允许更新内容
@@ -187,7 +187,7 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
     public void hideReply(Long replyId) {
         Reply reply = replyMapper.selectById(replyId);
         if (reply == null) {
-            throw new ReplyQueryException("回复不存在");
+            throw new BusinessException("回复不存在");
         }
 
         reply.setStatus("hidden");
@@ -199,7 +199,7 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
     public void showReply(Long replyId) {
         Reply reply = replyMapper.selectById(replyId);
         if (reply == null) {
-            throw new ReplyQueryException("回复不存在");
+            throw new BusinessException("回复不存在");
         }
 
         reply.setStatus("active");

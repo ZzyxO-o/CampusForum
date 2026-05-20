@@ -6,8 +6,7 @@ import cn.zuo.dto.discussionsdto.DiscussionPageQueryDto;
 import cn.zuo.dto.discussionsdto.DiscussionUpdateDto;
 import cn.zuo.entity.Discussion;
 import cn.zuo.entity.Reply;
-import cn.zuo.exception.discussionException.DiscussionDeleteException;
-import cn.zuo.exception.discussionException.DiscussionQueryException;
+import cn.zuo.exception.BusinessException;
 import cn.zuo.mapper.DiscussionMapper;
 import cn.zuo.mapper.ReplyMapper;
 import cn.zuo.result.PageResult;
@@ -83,7 +82,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     public DiscussionDetailVo getDiscussionDetailById(Long discussionId){
         Discussion discussion = discussionMapper.selectById(discussionId);
         if (discussion == null) {
-            throw new DiscussionQueryException("讨论不存在");
+            throw new BusinessException("讨论不存在");
         }
         // 增加浏览量
         discussion.setViewCount(discussion.getViewCount() + 1);
@@ -152,7 +151,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     public void updateDiscussion(DiscussionUpdateDto discussionUpdateDto) {
         Discussion discussion = discussionMapper.selectById(discussionUpdateDto.getId());
         if (discussion == null) {
-            throw new DiscussionQueryException("讨论不存在");
+            throw new BusinessException("讨论不存在");
         }
         BeanUtils.copyProperties(discussionUpdateDto, discussion);
         discussion.setUpdatedTime(LocalDateTime.now());
@@ -163,11 +162,11 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     public void userDeleteDiscussion(Long discussionId) {
         Discussion discussion = discussionMapper.selectById(discussionId);
         if (discussion == null) {
-            throw new DiscussionDeleteException("讨论不存在");
+            throw new BusinessException("讨论不存在");
         }
         // 检查用户是否有权限删除
         if (!discussion.getUserId().equals(ThreadLocalUtil.getCurrentId())) {
-            throw new DiscussionDeleteException("您没有权限删除其他用户的讨论");
+            throw new BusinessException("您没有权限删除其他用户的讨论");
         }
         // 软删除：修改状态为deleted
         discussion.setStatus("deleted");
@@ -179,7 +178,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     public void adminDeleteDiscussion(Long discussionId) {
         Discussion discussion = discussionMapper.selectById(discussionId);
         if (discussion == null) {
-            throw new DiscussionDeleteException("讨论不存在");
+            throw new BusinessException("讨论不存在");
         }
         // 软删除：修改状态为deleted
         discussion.setStatus("deleted");
@@ -216,7 +215,7 @@ public class DiscussionServiceImpl extends ServiceImpl<DiscussionMapper, Discuss
     public void closeDiscussion(Long discussionId) {
         Discussion discussion = discussionMapper.selectById(discussionId);
         if (discussion == null) {
-            throw new DiscussionQueryException("讨论不存在");
+            throw new BusinessException("讨论不存在");
         }
         discussion.setStatus("closed");
         discussion.setUpdatedTime(LocalDateTime.now());
