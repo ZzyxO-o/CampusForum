@@ -15,6 +15,7 @@ import cn.zuo.utils.JwtUtil;
 import cn.zuo.utils.ThreadLocalUtil;
 import cn.zuo.vo.admin.AdminUserStatsVo;
 import cn.zuo.vo.admin.DailyStatVo;
+import cn.zuo.vo.admin.NewStatsVo;
 import cn.zuo.vo.uservo.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -56,7 +57,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private FavoriteMapper favoriteMapper;
 
     @Resource
-    private RedisTemplate<String, String> redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Resource
     private JwtProperties jwtProperties;
@@ -196,9 +197,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     private Long getCachedCount(String key, java.util.function.Supplier<Long> countSupplier) {
-        String countStr = redisTemplate.opsForValue().get(key);
-        if (countStr != null) {
-            return Long.parseLong(countStr);
+        Object cached = redisTemplate.opsForValue().get(key);
+        if (cached instanceof Number) {
+            return ((Number) cached).longValue();
         }
         Long count = countSupplier.get();
         redisTemplate.opsForValue().set(key, count.toString(), RedisConstants.CACHE_EXPIRE, TimeUnit.SECONDS);
@@ -206,11 +207,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public cn.zuo.vo.admin.NewStatsVo getNewStats(Integer days) {
+    public NewStatsVo getNewStats(Integer days) {
         LocalDateTime startTime = LocalDate.now().minusDays(days - 1).atStartOfDay();
         LocalDateTime endTime = LocalDate.now().atTime(LocalTime.MAX);
 
-        cn.zuo.vo.admin.NewStatsVo vo = new cn.zuo.vo.admin.NewStatsVo();
+        NewStatsVo vo = new NewStatsVo();
         vo.setNewUsers(userMapper.selectCount(new LambdaQueryWrapper<User>()
                 .ge(User::getCreatedTime, startTime)
                 .le(User::getCreatedTime, endTime)));
@@ -408,8 +409,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Long onlineCount = redisTemplate.opsForSet().size(RedisConstants.ONLINE_USERS_KEY);
         stats.setOnlineUsers(onlineCount != null ? onlineCount : 0);
         // 获取今日登录次数
-        String dailyCountStr = redisTemplate.opsForValue().get(RedisConstants.DAILY_LOGIN_COUNT_KEY);
-        Long dailyCount = dailyCountStr != null ? Long.parseLong(dailyCountStr) : 0;
+        Object dailyCountObj = redisTemplate.opsForValue().get(RedisConstants.DAILY_LOGIN_COUNT_KEY);
+        Long dailyCount = 0L;
+        if (dailyCountObj instanceof Number) {
+            dailyCount = ((Number) dailyCountObj).longValue();
+        }
         stats.setDailyLoginCount(dailyCount);
         return stats;
     }

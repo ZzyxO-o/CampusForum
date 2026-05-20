@@ -219,12 +219,5 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
         return new PageResult(replyPage.getTotal(), replyPage.getRecords());
     }
 
-    @Override
-    public List<Reply> getTopReplies(int limit) {
-        QueryWrapper<Reply> wrapper = new QueryWrapper<>();
-        wrapper.eq("status", "active")
-                .orderByDesc("like_count", "created_time")
-                .last("LIMIT " + limit);
-        return replyMapper.selectList(wrapper);
-    }
+
 }

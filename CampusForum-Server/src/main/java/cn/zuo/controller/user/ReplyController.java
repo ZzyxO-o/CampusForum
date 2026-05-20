@@ -89,11 +89,5 @@ public class ReplyController {
         return Result.success(replyService.getUserReplies(replyPageQueryByDiscussionDto));
     }
 
-    @GetMapping("/top")
-    @Operation(summary = "热门回复", description = "获取热门回复（按点赞数或回复数）")
-    public Result<List<Reply>> getTopReplies(
-            @Parameter(description = "数量") @RequestParam(defaultValue = "10") int limit) {
-        log.info("获取热门回复: {}", limit);
-        return Result.success(replyService.getTopReplies(limit));
-    }
+
 }

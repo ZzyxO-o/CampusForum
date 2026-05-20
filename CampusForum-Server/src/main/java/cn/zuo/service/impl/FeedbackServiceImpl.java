@@ -72,7 +72,6 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
     }
 
     @Override
-    @Transactional
     public void deleteFeedback(Long id) {
         Feedback feedback = feedbackMapper.selectById(id);
         if (feedback == null) {
@@ -97,7 +96,6 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
     }
 
     @Override
-    @Transactional
     public void updateFeedbackStatus(FeedbackUpdateDto updateDto) {
         Feedback feedback = feedbackMapper.selectById(updateDto.getId());
         if (feedback == null) {

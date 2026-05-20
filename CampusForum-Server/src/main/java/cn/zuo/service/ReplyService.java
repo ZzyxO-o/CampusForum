@@ -78,10 +78,5 @@ public interface ReplyService extends IService<Reply> {
      */
     PageResult getUserReplies(ReplyPageQueryByDiscussionDto replyPageQueryByDiscussionDto);
 
-    /**
-     * 获取热门回复
-     * @param limit 数量
-     * @return 热门回复列表
-     */
-    List<Reply> getTopReplies(int limit);
+
 }
