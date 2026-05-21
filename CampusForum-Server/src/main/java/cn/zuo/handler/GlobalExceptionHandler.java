@@ -1,7 +1,7 @@
 package cn.zuo.handler;
 
 
-import cn.zuo.constant.exceptionConstant.SystemExceptionConstant;
+import cn.zuo.constant.SystemExceptionConstant;
 import cn.zuo.exception.BusinessException;
 import cn.zuo.result.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler
     public Result<String> handleBusinessException(BusinessException e) {
-        log.error("业务异常信息：{}", e.getMessage());
+        log.warn("业务异常信息：{}", e.getMessage(),e);
         return Result.error(e.getMessage());
     }
 
@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler
     public Result<String> handleSQLException(SQLIntegrityConstraintViolationException e) {
-        log.error("SQL异常信息:{}", e.getMessage());
+        log.error("SQL异常信息:{}", e.getMessage(),e);
         String message = e.getMessage();
         if(message.contains("Duplicate")){
             String[] split = message.split(" ");
