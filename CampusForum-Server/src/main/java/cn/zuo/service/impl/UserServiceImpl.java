@@ -2,7 +2,7 @@ package cn.zuo.service.impl;
 
 import cn.zuo.constant.JwtClaimsConstant;
 import cn.zuo.constant.RedisConstants;
-import cn.zuo.constant.businessConstant.UserConstants;
+import cn.zuo.constant.UserConstants;
 import cn.zuo.dto.userdto.*;
 import cn.zuo.entity.*;
 import cn.zuo.exception.BusinessException;
@@ -310,6 +310,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateUser.setPassword(hashedNewPassword);
         updateUser.setUpdatedTime(LocalDateTime.now());
         userMapper.updateById(updateUser);
+        log.info("密码修改成功: userId={}", userId);
     }
 
     @Override
@@ -333,6 +334,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateUser.setStatus("INACTIVE"); // 软删除，标记为不活跃
         updateUser.setUpdatedTime(LocalDateTime.now());
         userMapper.updateById(updateUser);
+        log.info("用户软删除成功: userId={}", userId);
     }
 
     @Override
@@ -346,6 +348,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateUser.setStatus(status);
         updateUser.setUpdatedTime(LocalDateTime.now());
         userMapper.updateById(updateUser);
+        log.info("用户状态更新: userId={}, status={}", userId, status);
     }
 
     @Override
@@ -359,6 +362,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateUser.setRole(role);
         updateUser.setUpdatedTime(LocalDateTime.now());
         userMapper.updateById(updateUser);
+        log.info("用户角色更新: userId={}, role={}", userId, role);
     }
 
     /**

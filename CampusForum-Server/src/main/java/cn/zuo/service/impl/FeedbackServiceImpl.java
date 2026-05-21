@@ -15,12 +15,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> implements FeedbackService {
 
@@ -37,6 +39,7 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
         feedback.setCreatedTime(LocalDateTime.now());
         feedback.setUpdatedTime(LocalDateTime.now());
         feedbackMapper.insert(feedback);
+        log.info("反馈提交成功: feedbackId={}, userId={}, type={}", feedback.getId(), feedback.getUserId(), feedback.getType());
 
         FeedbackMessageVo vo = new FeedbackMessageVo();
         vo.setFeedbackId(feedback.getId());
@@ -81,6 +84,7 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
             throw new BusinessException(FeedbackConstants.FEEDBACK_PERMISSION_DENIED);
         }
         feedbackMapper.deleteById(id);
+        log.info("反馈删除成功: feedbackId={}", id);
     }
 
     @Override
@@ -104,5 +108,6 @@ public class FeedbackServiceImpl extends ServiceImpl<FeedbackMapper, Feedback> i
         feedback.setStatus(updateDto.getStatus());
         feedback.setUpdatedTime(LocalDateTime.now());
         feedbackMapper.updateById(feedback);
+        log.info("反馈状态更新成功: feedbackId={}, status={}", feedback.getId(), updateDto.getStatus());
     }
 }

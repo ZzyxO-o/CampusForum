@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "用户注册", description = "新用户注册账号")
     public Result<UserRegisterVO> register (@RequestBody UserRegisterDTO userRegisterDTO) {
-        log.info("用户注册：{}", userRegisterDTO);
+        log.info("用户注册：username={}", userRegisterDTO.getUsername());
         UserRegisterVO userRegisterVO = userService.userRegister(userRegisterDTO);
         return Result.success(userRegisterVO);
     }
@@ -37,7 +37,7 @@ public class UserController {
     @PostMapping("/login")
     @Operation(summary = "用户登录", description = "用户通过用户名和密码进行登录")
     public Result<UserLoginVO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        log.info("用户登录：{}", userLoginDTO);
+        log.info("用户登录：username={}", userLoginDTO.getUsername());
         UserLoginVO userLoginVO = userService.userLogin(userLoginDTO);
         return Result.success(userLoginVO);
     }
@@ -45,7 +45,7 @@ public class UserController {
     @GetMapping("/getUserById/{userId}")
     @Operation(summary = "获取用户信息", description = "根据用户ID获取用户详细信息")
     public Result<User> getUserInfo(@PathVariable Long userId) {
-        log.info("根据id获取用户信息：{}", userId);
+        log.debug("根据id获取用户信息: userId={}", userId);
         User user = userService.getById(userId);
         if (user == null) {
             return Result.error("用户不存在");
@@ -57,7 +57,7 @@ public class UserController {
     @GetMapping("/getUserStats/{userId}")
     @Operation(summary = "获取用户统计信息", description = "根据用户ID获取用户统计信息")
     public Result<UserStatsVo> getUserStats(@PathVariable Long userId) {
-        log.info("获取用户统计信息：{}", userId);
+        log.debug("获取用户统计信息: userId={}", userId);
         UserStatsVo userStatsVo = userService.getUserStatsByUserId(userId);
         return Result.success(userStatsVo);
     }
@@ -73,7 +73,7 @@ public class UserController {
     @PutMapping
     @Operation(summary = "更新用户信息", description = "更新用户的基本信息")
     public Result<String> updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO) {
-        log.info("更新用户信息:{}", userUpdateDTO);
+        log.info("更新用户信息: userId={}", userUpdateDTO.getUserId());
         userService.updateUserById(userUpdateDTO);
         return Result.success("用户信息更新成功");
     }
@@ -81,7 +81,7 @@ public class UserController {
     @PutMapping("/change-password")
     @Operation(summary = "修改密码", description = "修改用户密码")
     public Result<String> changePassword(@RequestBody UserChangePasswordDTO userChangePasswordDTO) {
-        log.info("用户修改密码：{}", userChangePasswordDTO);
+        log.info("用户修改密码：userId={}", userChangePasswordDTO.getUserId());
         userService.changePassword(userChangePasswordDTO);
         return Result.success("密码修改成功");
     }
@@ -120,7 +120,7 @@ public class UserController {
     @Operation(summary = "获取活跃用户", description = "获取活跃用户排行榜，默认返回前10名")
     public Result<List<ActiveUserVo>> getActiveUsers(
             @Parameter(description = "返回数量限制") @RequestParam(required = false) Integer limit) {
-        log.info("获取活跃用户列表，limit：{}", limit);
+        log.debug("获取活跃用户列表: limit={}", limit);
         List<ActiveUserVo> activeUsers = userService.getActiveUsers(limit);
         return Result.success(activeUsers);
     }

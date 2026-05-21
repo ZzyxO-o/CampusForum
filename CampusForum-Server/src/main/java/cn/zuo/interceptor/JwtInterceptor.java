@@ -49,7 +49,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         if (token == null) {
             //token为空，拒绝访问
-            log.info("token为空，拒绝访问");
+            log.warn("token为空，拒绝访问");
             //设置响应状态码为401，拒绝访问
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json;charset=UTF-8");
@@ -59,7 +59,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 
         //2、校验令牌
         try {
-            log.info("jwt校验:{}", token);
+            log.debug("jwt校验: token前缀={}...", token.substring(0, Math.min(20, token.length())));
             // 去除Bearer前缀
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7);
@@ -70,7 +70,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             String blackToken = (String) redisTemplate.opsForValue().get(RedisConstants.TOKEN_BLACKLIST_PREFIX + token);
             if (blackToken != null) {
                 //token在黑名单中，拒绝访问
-                log.info("token在黑名单中，拒绝访问{}", blackToken);
+                log.warn("token在黑名单中，拒绝访问");
                 //设置响应状态码为401，拒绝访问
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json;charset=UTF-8");
@@ -79,7 +79,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             }
             //4.将用户id设置到ThreadLocal中
             ThreadLocalUtil.setCurrentId(userId);
-            log.info("当前登录用户id：{}", userId);
+            log.debug("当前登录用户id：{}", userId);
         }catch (Exception e) {
             log.error("jwt校验失败", e);
             //设置响应状态码为401，拒绝访问

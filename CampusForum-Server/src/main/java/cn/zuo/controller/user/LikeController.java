@@ -26,14 +26,14 @@ public class LikeController {
     @PostMapping
     @Operation(summary = "点赞/取消点赞", description = "对讨论或回复进行点赞或取消点赞")
     public Result<LikeMessageVo> toggleLike(@RequestBody LikeDto likeDto) {
-        log.info("点赞/取消点赞: {}", likeDto);
+        log.info("点赞/取消点赞: targetType={}, targetId={}", likeDto.getTargetType(), likeDto.getTargetId());
         return Result.success(likeService.toggleLike(likeDto));
     }
 
     @GetMapping("/check")
     @Operation(summary = "检查是否已点赞", description = "检查用户是否已对目标点赞")
     public Result<Boolean> checkLiked(LikeDto likeDto) {
-        log.info("检查是否已点赞: {}", likeDto);
+        log.debug("检查是否已点赞: targetType={}, targetId={}", likeDto.getTargetType(), likeDto.getTargetId());
         boolean isLiked = likeService.isLiked(likeDto);
         return Result.success(isLiked);
     }
@@ -43,14 +43,14 @@ public class LikeController {
     public Result<Integer> getLikeCount(
             @Parameter(description = "目标类型") @RequestParam String targetType,
             @Parameter(description = "目标ID") @RequestParam Long targetId) {
-        log.info("获取点赞数: targetType={}, targetId={}", targetType, targetId);
+        log.debug("获取点赞数: targetType={}, targetId={}", targetType, targetId);
         return Result.success(likeService.getLikeCount(targetType, targetId));
     }
 
     @GetMapping("/user/discussion")
     @Operation(summary = "获取用户点赞列表", description = "获取用户点赞的讨论目标ID列表")
     public Result<PageResult<Like>> getUserLikes(LikePageQueryDto queryDto) {
-        log.info("获取用户点赞讨论列表: {}", queryDto);
+        log.debug("获取用户点赞讨论列表: userId={}", queryDto.getUserId());
         PageResult<Like> pageResult = likeService.getUserLikes(queryDto);
         return Result.success(pageResult);
     }

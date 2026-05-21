@@ -57,7 +57,7 @@ public class FeedbackController {
     @GetMapping
     @Operation(summary = "获取我的反馈列表", description = "分页获取当前用户的反馈列表，可按状态筛选")
     public Result<PageResult<Feedback>> getMyFeedbacks(FeedbackPageQueryDto queryDto) {
-        log.info("获取我的反馈列表: page={}, size={}, status={}", queryDto.getPage(), queryDto.getSize(), queryDto.getStatus());
+        log.debug("获取我的反馈列表: page={}, size={}, status={}", queryDto.getPage(), queryDto.getSize(), queryDto.getStatus());
         return Result.success(feedbackService.getUserFeedbacks(queryDto));
     }
 
@@ -71,7 +71,7 @@ public class FeedbackController {
     @Operation(summary = "获取反馈详情", description = "根据ID获取反馈详情，仅能查看自己的反馈")
     public Result<Feedback> getFeedbackDetail(
             @Parameter(description = "反馈ID") @PathVariable Long id) {
-        log.info("获取反馈详情: id={}", id);
+        log.debug("获取反馈详情: id={}", id);
         return Result.success(feedbackService.getFeedbackById(id));
     }
 

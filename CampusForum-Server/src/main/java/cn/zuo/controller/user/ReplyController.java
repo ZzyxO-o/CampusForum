@@ -29,14 +29,14 @@ public class ReplyController {
     @PostMapping
     @Operation(summary = "添加回复", description = "添加新的回复")
     public Result<ReplyMessageVo> createReply(@RequestBody ReplyDto replyDto) {
-        log.info("添加回复: {}", replyDto);
+        log.info("添加回复: discussionId={}", replyDto.getDiscussionId());
         return Result.success(replyService.createReply(replyDto));
     }
 
     @DeleteMapping("/{replyId}")
     @Operation(summary = "删除回复", description = "删除回复（软删除）")
     public Result<String> deleteReply(@Parameter(description = "回复ID") @PathVariable Long replyId) {
-        log.info("删除回复: {}", replyId);
+        log.info("删除回复: replyId={}", replyId);
         replyService.deleteReply(replyId);
         return Result.success("删除成功");
     }
@@ -44,7 +44,7 @@ public class ReplyController {
     @PutMapping
     @Operation(summary = "更新回复", description = "修改回复内容")
     public Result<String> updateReply(@RequestBody ReplyUpdateDto replyUpdateDto) {
-        log.info("更新回复: {}", replyUpdateDto);
+        log.info("更新回复: replyId={}", replyUpdateDto.getId());
         replyService.updateReply(replyUpdateDto);
         return Result.success("更新成功");
     }
@@ -52,7 +52,7 @@ public class ReplyController {
     @PostMapping("/{replyId}/hide")
     @Operation(summary = "隐藏回复", description = "隐藏回复内容")
     public Result<String> hideReply(@Parameter(description = "回复ID") @PathVariable Long replyId) {
-        log.info("隐藏回复: {}", replyId);
+        log.info("隐藏回复: replyId={}", replyId);
         replyService.hideReply(replyId);
         return Result.success("回复已隐藏");
     }
@@ -60,7 +60,7 @@ public class ReplyController {
     @PostMapping("/{replyId}/show")
     @Operation(summary = "显示回复", description = "重新显示已隐藏的回复")
     public Result<String> showReply(@Parameter(description = "回复ID") @PathVariable Long replyId) {
-        log.info("显示回复: {}", replyId);
+        log.info("显示回复: replyId={}", replyId);
         replyService.showReply(replyId);
         return Result.success("回复已显示");
     }
@@ -68,14 +68,14 @@ public class ReplyController {
     @GetMapping("/discussion")
     @Operation(summary = "获取讨论回复", description = "获取指定讨论的所有回复")
     public Result<PageResult> getDiscussionReplies(ReplyPageQueryByDiscussionDto replyPageQueryByDiscussionDto) {
-        log.info("获取讨论回复: {}", replyPageQueryByDiscussionDto);
+        log.debug("获取讨论回复: discussionId={}", replyPageQueryByDiscussionDto.getDiscussionId());
         return Result.success(replyService.getDiscussionReplies(replyPageQueryByDiscussionDto));
     }
 
     @GetMapping("/{replyId}/children")
     @Operation(summary = "获取子回复", description = "获取指定回复的所有子回复")
     public Result<List<Reply>> getChildReplies(@Parameter(description = "回复ID") @PathVariable Long replyId) {
-        log.info("获取子回复: {}", replyId);
+        log.debug("获取子回复: replyId={}", replyId);
         return Result.success(replyService.getChildReplies(replyId));
     }
 
@@ -85,7 +85,7 @@ public class ReplyController {
             @Parameter(description = "用户ID") @PathVariable Long userId,
             ReplyPageQueryByDiscussionDto replyPageQueryByDiscussionDto) {
         replyPageQueryByDiscussionDto.setUserId(userId);
-        log.info("获取用户回复: {}", replyPageQueryByDiscussionDto);
+        log.debug("获取用户回复: userId={}", replyPageQueryByDiscussionDto.getUserId());
         return Result.success(replyService.getUserReplies(replyPageQueryByDiscussionDto));
     }
 

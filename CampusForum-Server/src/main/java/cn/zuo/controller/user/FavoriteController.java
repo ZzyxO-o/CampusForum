@@ -26,7 +26,7 @@ public class FavoriteController {
     @PostMapping
     @Operation(summary = "收藏/取消收藏", description = "对讨论进行收藏或取消收藏")
     public Result<FavoriteMessageVo> toggleFavorite(@RequestBody FavoriteDto favoriteDto) {
-        log.info("收藏/取消收藏: {}", favoriteDto);
+        log.info("收藏/取消收藏: discussionId={}", favoriteDto.getDiscussionId());
         return Result.success(favoriteService.toggleFavorite(favoriteDto));
     }
 
@@ -34,7 +34,7 @@ public class FavoriteController {
     @Operation(summary = "检查是否已收藏", description = "检查用户是否已收藏该讨论")
     public Result<Boolean> checkFavorited(
             @Parameter(description = "讨论ID") @RequestParam Long discussionId) {
-        log.info("检查是否已收藏: discussionId={}", discussionId);
+        log.debug("检查是否已收藏: discussionId={}", discussionId);
         boolean isFavorited = favoriteService.isFavorited(discussionId);
         return Result.success(isFavorited);
     }
@@ -42,7 +42,7 @@ public class FavoriteController {
     @GetMapping("/user")
     @Operation(summary = "获取用户收藏列表", description = "获取用户收藏的讨论列表")
     public Result<PageResult<Favorite>> getUserFavorites(FavoritePageQueryDto favoritePageQueryDto) {
-        log.info("获取用户收藏列表: {}", favoritePageQueryDto);
+        log.debug("获取用户收藏列表: userId={}", favoritePageQueryDto.getUserId());
         PageResult<Favorite> pageResult = favoriteService.getUserFavorites(favoritePageQueryDto);
         return Result.success(pageResult);
     }
@@ -51,7 +51,7 @@ public class FavoriteController {
     @Operation(summary = "获取收藏数", description = "获取讨论的收藏数量")
     public Result<Integer> getFavoriteCount(
             @Parameter(description = "讨论ID") @RequestParam Long discussionId) {
-        log.info("获取收藏数: discussionId={}", discussionId);
+        log.debug("获取收藏数: discussionId={}", discussionId);
         int count = favoriteService.getFavoriteCount(discussionId);
         return Result.success(count);
     }

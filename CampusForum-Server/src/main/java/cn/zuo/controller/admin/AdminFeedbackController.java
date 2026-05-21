@@ -1,6 +1,6 @@
 package cn.zuo.controller.admin;
 
-import cn.zuo.constant.businessConstant.FeedbackConstants;
+import cn.zuo.constant.FeedbackConstants;
 import cn.zuo.dto.feedbackdto.FeedbackPageQueryDto;
 import cn.zuo.dto.feedbackdto.FeedbackUpdateDto;
 import cn.zuo.entity.Feedback;
@@ -42,7 +42,7 @@ public class AdminFeedbackController {
     @GetMapping
     @Operation(summary = "获取所有反馈列表", description = "管理员分页查看所有用户反馈，可按状态筛选")
     public Result<PageResult<Feedback>> getAllFeedbacks(FeedbackPageQueryDto queryDto) {
-        log.info("管理员获取反馈列表: page={}, size={}, status={}", queryDto.getPage(), queryDto.getSize(), queryDto.getStatus());
+        log.debug("管理员获取反馈列表: page={}, size={}, status={}", queryDto.getPage(), queryDto.getSize(), queryDto.getStatus());
         return Result.success(feedbackService.adminGetFeedbacks(queryDto));
     }
 
@@ -55,7 +55,7 @@ public class AdminFeedbackController {
     @Operation(summary = "获取反馈详情", description = "管理员根据ID查看任意反馈详情")
     public Result<Feedback> getFeedbackDetail(
             @Parameter(description = "反馈ID") @PathVariable Long id) {
-        log.info("管理员获取反馈详情: id={}", id);
+        log.debug("管理员获取反馈详情: id={}", id);
         Feedback feedback = feedbackService.getById(id);
         return Result.success(feedback);
     }

@@ -44,7 +44,7 @@ public class AdminUserController {
     @PutMapping
     @Operation(summary = "管理员更新用户信息", description = "管理员更新用户的基本信息")
     public Result<String> updateUserInfo(@RequestBody UserUpdateDTO userUpdateDTO) {
-        log.info("更新用户信息:{}", userUpdateDTO);
+        log.info("管理员更新用户信息: userId={}", userUpdateDTO.getUserId());
         userService.updateUserById(userUpdateDTO);
         return Result.success("用户信息更新成功");
     }
@@ -52,6 +52,7 @@ public class AdminUserController {
     @PostMapping("/{userId}/deactivate")
     @Operation(summary = "停用用户", description = "管理员停用用户账号")
     public Result<String> deactivateUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
+        log.info("管理员停用用户: userId={}", userId);
         userService.updateUserStatus(userId, "INACTIVE");
         return Result.success("用户已停用");
     }
@@ -59,6 +60,7 @@ public class AdminUserController {
     @PostMapping("/{userId}/activate")
     @Operation(summary = "激活用户", description = "管理员激活用户账号")
     public Result<String> activateUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
+        log.info("管理员激活用户: userId={}", userId);
         userService.updateUserStatus(userId, "ACTIVE");
         return Result.success("用户已激活");
     }
@@ -66,6 +68,7 @@ public class AdminUserController {
     @PostMapping("/{userId}/ban")
     @Operation(summary = "封禁用户", description = "管理员封禁用户账号")
     public Result<String> banUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
+        log.info("管理员封禁用户: userId={}", userId);
         userService.updateUserStatus(userId, "BANNED");
         return Result.success("用户已封禁");
     }
@@ -73,6 +76,7 @@ public class AdminUserController {
     @DeleteMapping("/{userId}")
     @Operation(summary = "删除用户", description = "管理员删除用户账号（软删除）")
     public Result<String> deleteUser(@Parameter(description = "用户ID") @PathVariable Long userId) {
+        log.info("管理员删除用户: userId={}", userId);
         userService.deleteUserById(userId);
         return Result.success("用户已删除");
     }

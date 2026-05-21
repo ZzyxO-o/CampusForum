@@ -116,6 +116,8 @@ public class ReplyServiceImpl extends ServiceImpl<ReplyMapper, Reply> implements
         discussion.setUpdatedTime(LocalDateTime.now());
         discussionMapper.updateById(discussion);
         // 返回结果
+        log.info("回复创建成功: replyId={}, discussionId={}, userId={}", reply.getId(), replyDto.getDiscussionId(), userId);
+
         ReplyMessageVo replyMessageVo = new ReplyMessageVo();
         replyMessageVo.setReplyId(reply.getId());
         replyMessageVo.setMessage("回复创建成功");

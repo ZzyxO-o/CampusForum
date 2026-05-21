@@ -110,6 +110,7 @@ public class NotificationServiceImpl extends ServiceImpl<NotificationMapper, Not
         notification.setIsRead(false);
         notification.setCreatedTime(LocalDateTime.now());
         notificationMapper.insert(notification);
+        log.info("系统通知发送成功: targetUserId={}, title={}", adminNotificationDto.getUserId(), adminNotificationDto.getTitle());
     }
 
     @Override
