@@ -1,4 +1,4 @@
-package cn.zuo.constant.exceptionConstant;
+package cn.zuo.constant;
 
 public class SystemExceptionConstant {
     public static final String ALREADY_EXIST = "已存在";

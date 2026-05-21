@@ -1,4 +1,4 @@
-package cn.zuo.constant.businessConstant;
+package cn.zuo.constant;
 
 public class UserConstants {
 

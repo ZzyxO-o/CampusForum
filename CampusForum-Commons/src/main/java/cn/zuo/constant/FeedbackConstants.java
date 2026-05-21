@@ -1,4 +1,4 @@
-package cn.zuo.constant.businessConstant;
+package cn.zuo.constant;
 
 /**
  * 反馈模块常量

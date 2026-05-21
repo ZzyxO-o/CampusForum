@@ -1,6 +1,6 @@
 package cn.zuo.service.impl;
 
-import cn.zuo.constant.businessConstant.FeedbackConstants;
+import cn.zuo.constant.FeedbackConstants;
 import cn.zuo.dto.feedbackdto.FeedbackDto;
 import cn.zuo.dto.feedbackdto.FeedbackPageQueryDto;
 import cn.zuo.dto.feedbackdto.FeedbackUpdateDto;
